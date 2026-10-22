@@ -3,5 +3,9 @@ name: Экран установки показывает, что клавиат�
 ---
 - launchApp:
     stopApp: false
-- assertVisible: "Yangi özbek alifbosi klaviaturasi"
+- hideKeyboard
+# Сценарии идут в любом порядке: экран может быть уже прокручен вниз.
+- scrollUntilVisible:
+    element: "Yangi özbek alifbosi klaviaturasi"
+    direction: UP
 - assertVisible: "Hammasi tayyor: Alifbo klaviaturasi tanlangan"
