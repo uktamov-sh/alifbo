@@ -15,7 +15,9 @@ let ns = null, inText = false, buf = [], pages = 0;
 const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'", "&nbsp;": " " };
 
 function clean(t) {
-  t = t.replace(/&(amp|lt|gt|quot|#39|nbsp);/g, m => ENTITIES[m]);
+  // В дампе бывает двойное кодирование (&amp;nbsp;), поэтому раскодируем дважды.
+  for (let i = 0; i < 2; i++) t = t.replace(/&(amp|lt|gt|quot|#39|nbsp);/g, m => ENTITIES[m]);
+  t = t.replace(/^=+.*?=+\s*$/gm, " ");  // заголовки разделов: «Manbalar», «Havolalar»
   t = t.replace(/<!--[\s\S]*?-->/g, " ");
   t = t.replace(/<ref[^>]*\/>/gi, " ").replace(/<ref[\s\S]*?<\/ref>/gi, " ");
   t = t.replace(/<[^>]+>/g, " ");
@@ -69,7 +71,8 @@ rl.on("close", () => {
   const words = new Map();
   for (const [raw, n] of counts) {
     const w = toNewLatin(raw);
-    if (!ALPHABET.test(w) || /[cw]/i.test(w) || w.startsWith("ʼ") || w.endsWith("ʼ")) continue;
+    // Слово без гласной — сокращение (km, mln): в подсказках не нужно.
+    if (!ALPHABET.test(w) || /[cw]/i.test(w) || !/[aeiouö]/i.test(w) || w.startsWith("ʼ") || w.endsWith("ʼ")) continue;
     const key = w.toLowerCase();
     let e = words.get(key);
     if (!e) words.set(key, e = { total: 0, forms: new Map() });
