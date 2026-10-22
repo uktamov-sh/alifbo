@@ -86,4 +86,4 @@ foreach ($c in $cases) {
     }
 }
 Write-Host "$($cases.Count - $failed)/$($cases.Count) проверок прошли"
-if ($failed) { exit 1 }
+exit [int]($failed -gt 0)
