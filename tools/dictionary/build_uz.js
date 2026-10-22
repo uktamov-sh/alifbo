@@ -68,12 +68,17 @@ rl.on("close", () => {
   // Сводим написания к новому алфавиту. Регистр: строчное, если оно встречается хотя бы в 10% случаев
   // (заглавные в начале предложения не в счёт), иначе самое частое (Toşkent, BMT).
   const ALPHABET = /^[a-zçğöşʼ]+$/iu;
+  // Английские слова из названий книг и фильмов и команды формул в узбекский словарь не берём.
+  const FOREIGN = new Set(("the of and in to is for on with by from at as an or be are was it this that " +
+    "which not his her their its also has have were had been new first one two body my me you we all " +
+    "mathsf mathrm mathbf frac text style left right").split(" "));
   const words = new Map();
   for (const [raw, n] of counts) {
     const w = toNewLatin(raw);
     // Слово без гласной — сокращение (km, mln): в подсказках не нужно.
     if (!ALPHABET.test(w) || /[cw]/i.test(w) || !/[aeiouö]/i.test(w) || w.startsWith("ʼ") || w.endsWith("ʼ")) continue;
     const key = w.toLowerCase();
+    if (FOREIGN.has(key)) continue;
     let e = words.get(key);
     if (!e) words.set(key, e = { total: 0, forms: new Map() });
     e.total += n;
