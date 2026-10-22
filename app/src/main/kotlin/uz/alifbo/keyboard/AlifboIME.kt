@@ -3,6 +3,7 @@ package uz.alifbo.keyboard
 import android.inputmethodservice.InputMethodService
 import android.os.Build
 import android.os.SystemClock
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.KeyEvent
@@ -28,9 +29,11 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
     private var page = Page.UZ
     private val shift = ShiftState()
     private var policy = FieldPolicy.DEFAULT
+    private var settings = KeyboardSettings.from(emptyMap<String, Any>())
+    private var emojiIndex = 0
 
     private val suggesters = HashMap<Page, Suggester>()
-    private val prefs by lazy { getSharedPreferences("settings", MODE_PRIVATE) }
+    private val prefs by lazy { getSharedPreferences(KeyboardSettings.FILE, MODE_PRIVATE) }
 
     override fun onCreate() {
         super.onCreate()
@@ -41,10 +44,16 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(getColor(R.color.keyboard_bg))
+            // Увеличенная буква верхнего ряда рисуется поверх полосы подсказок.
+            clipChildren = false
+            clipToPadding = false
         }
         strip = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         root.addView(strip, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)))
-        keyboard = KeyboardView(this).also { it.listener = this }
+        keyboard = KeyboardView(this).also {
+            it.listener = this
+            it.configure(settings, allowPreview = !policy.sensitive)
+        }
         root.addView(keyboard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         // С Android 15 окно клавиатуры уходит под системную полосу навигации: поднимаем клавиши над ней.
         root.setOnApplyWindowInsetsListener { v, insets ->
@@ -62,6 +71,8 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
     override fun onStartInputView(info: EditorInfo, restarting: Boolean) {
         super.onStartInputView(info, restarting)
         policy = FieldPolicy.of(info.inputType)
+        settings = KeyboardSettings.read(prefs)
+        keyboard?.configure(settings, allowPreview = !policy.sensitive)
         page = if (policy.startOnSymbols) Page.SYMBOLS else language
         refreshShift()
         render()
@@ -90,7 +101,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
 
     private fun render() {
         keyboard?.setKeys(
-            rows = Layouts.forPage(page),
+            rows = Layouts.forPage(page, emojiIndex),
             upper = onLetters && shift.isUpper,
             locked = shift.mode == ShiftState.Mode.LOCK,
             spaceLabel = getString(if (language == Page.UZ) R.string.space_uz else R.string.space_ru),
@@ -127,6 +138,9 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
             Action.SYMBOLS -> page = Page.SYMBOLS
             Action.SYMBOLS2 -> page = Page.SYMBOLS2
             Action.LETTERS -> page = language
+            Action.EMOJI -> page = Page.EMOJI
+            Action.EMOJI_PREV -> emojiIndex = (emojiIndex - 1).mod(Layouts.EMOJI_PAGES)
+            Action.EMOJI_NEXT -> emojiIndex = (emojiIndex + 1).mod(Layouts.EMOJI_PAGES)
             Action.LANGUAGE -> {
                 language = if (language == Page.UZ) Page.RU else Page.UZ
                 page = language
@@ -152,7 +166,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         s.removeAllViews()
         if (policy.sensitive) return
         if (policy.converter) s.addView(chip(getString(R.string.convert), accent = true) { convertField() }, chipParams(weighted = false))
-        if (!policy.suggestions || !onLetters) return
+        if (!policy.suggestions || !settings.suggestions || !onLetters) return
         val before = currentInputConnection?.getTextBeforeCursor(48, 0) ?: return
         val word = Suggester.currentWord(before)
         if (word.isEmpty()) return
@@ -198,6 +212,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         this.text = text
         gravity = Gravity.CENTER
         maxLines = 1
+        ellipsize = TextUtils.TruncateAt.END
         setPadding(dp(12), 0, dp(12), 0)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, if (accent) 14f else 16f)
         setTextColor(getColor(if (accent) R.color.new_letter else R.color.ink))

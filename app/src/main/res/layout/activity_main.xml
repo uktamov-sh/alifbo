@@ -81,6 +81,60 @@
 
         <TextView
             style="@style/Step"
+            android:text="@string/settings_title" />
+
+        <Switch
+            android:id="@+id/setting_vibration"
+            style="@style/SettingSwitch"
+            android:text="@string/setting_vibration" />
+
+        <Switch
+            android:id="@+id/setting_sound"
+            style="@style/SettingSwitch"
+            android:text="@string/setting_sound" />
+
+        <Switch
+            android:id="@+id/setting_preview"
+            style="@style/SettingSwitch"
+            android:text="@string/setting_preview" />
+
+        <Switch
+            android:id="@+id/setting_suggestions"
+            style="@style/SettingSwitch"
+            android:text="@string/setting_suggestions" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/setting_height"
+            android:textColor="@color/ink"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/setting_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/height_small"
+                style="@style/HeightOption"
+                android:text="@string/height_small" />
+
+            <RadioButton
+                android:id="@+id/height_medium"
+                style="@style/HeightOption"
+                android:text="@string/height_medium" />
+
+            <RadioButton
+                android:id="@+id/height_large"
+                style="@style/HeightOption"
+                android:text="@string/height_large" />
+        </RadioGroup>
+
+        <TextView
+            style="@style/Step"
             android:text="@string/privacy_title" />
 
         <TextView
@@ -91,6 +145,14 @@
             android:text="@string/privacy_body"
             android:textColor="@color/ink"
             android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/dictionary_credits"
+            android:textColor="@color/muted"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/footer"

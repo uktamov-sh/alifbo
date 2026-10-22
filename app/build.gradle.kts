@@ -1,14 +1,32 @@
 import com.android.build.api.artifact.SingleArtifact
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     id("com.android.application")
     kotlin("android")
 }
 
+// Ключ подписи живёт вне репозитория: ~/.alifbo-signing/keystore.properties
+// (или файл из переменной ALIFBO_SIGNING). Без него релиз собирается неподписанным.
+val signingProps = file(
+    System.getenv("ALIFBO_SIGNING") ?: "${System.getProperty("user.home")}/.alifbo-signing/keystore.properties"
+).takeIf { it.exists() }?.let { f -> Properties().apply { f.inputStream().use { load(it) } } }
+
 android {
     namespace = "uz.alifbo.keyboard"
     compileSdk = 36
+
+    signingConfigs {
+        if (signingProps != null) {
+            create("release") {
+                storeFile = file(signingProps.getProperty("storeFile"))
+                storePassword = signingProps.getProperty("storePassword")
+                keyAlias = signingProps.getProperty("keyAlias")
+                keyPassword = signingProps.getProperty("keyPassword")
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "uz.alifbo.keyboard"
@@ -23,6 +41,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 

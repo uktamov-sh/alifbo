@@ -54,6 +54,26 @@ class LayoutsTest {
     }
 
     @Test
+    fun `на страницах букв есть кнопка эмодзи`() {
+        listOf(Page.UZ, Page.RU).forEach { page ->
+            assertTrue(Action.EMOJI in Layouts.forPage(page).flatten().mapNotNull { it.action }, "Нет эмодзи на $page")
+        }
+    }
+
+    @Test
+    fun `страницы эмодзи без повторов, с возвратом к буквам и листанием`() {
+        val all = (0 until Layouts.EMOJI_PAGES).flatMap { Layouts.emojiPage(it).flatten().mapNotNull { k -> k.text } }
+        assertTrue(all.size >= 100, "Мало эмодзи: ${all.size}")
+        assertEquals(all.size, all.toSet().size, "Повторы: ${all.groupBy { it }.filter { it.value.size > 1 }.keys}")
+        (0 until Layouts.EMOJI_PAGES).forEach { i ->
+            val actions = Layouts.emojiPage(i).flatten().mapNotNull { it.action }
+            listOf(Action.LETTERS, Action.BACKSPACE, Action.EMOJI_PREV, Action.EMOJI_NEXT, Action.SPACE).forEach {
+                assertTrue(it in actions, "Страница эмодзи $i: нет $it")
+            }
+        }
+    }
+
+    @Test
     fun `верхний ряд узбекской раскладки даёт цифры долгим нажатием`() {
         val top = Layouts.forPage(Page.UZ)[0]
         assertEquals("1234567890".map { it.toString() }, top.take(10).map { it.longPress })

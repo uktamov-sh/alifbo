@@ -20,4 +20,27 @@
     <string name="privacy_title">Приватность</string>
     <string name="privacy_body">• У приложения нет доступа в интернет: данные никуда не отправляются.\n• В полях паролей и PIN-кодов клавиатура не читает текст и ничего не подсказывает.\n• Набранный текст не сохраняется и не пишется в журнал.\n• Кнопка «eski→yangi» срабатывает только когда вы её нажимаете.</string>
     <string name="footer">Алфавит: закон O‘RQ-1184 от 21.10.2026. Версия %1$s</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="setting_vibration">Вибрация при нажатии</string>
+    <string name="setting_sound">Звук нажатия</string>
+    <string name="setting_preview">Показывать нажатую букву крупно</string>
+    <string name="setting_suggestions">Подсказки слов</string>
+    <string name="setting_height">Высота клавиш</string>
+    <string name="height_small">Низкие</string>
+    <string name="height_medium">Средние</string>
+    <string name="height_large">Высокие</string>
+    <string name="dictionary_credits">Источники словарей: узбекская Википедия и OpenSubtitles (FrequencyWords), CC BY-SA 4.0.</string>
+
+    <string name="key_shift">Заглавная буква</string>
+    <string name="key_backspace">Удалить</string>
+    <string name="key_enter">Ввод</string>
+    <string name="key_space">Пробел</string>
+    <string name="key_symbols">Цифры и символы</string>
+    <string name="key_letters">Буквы</string>
+    <string name="key_language">Сменить язык</string>
+    <string name="key_emoji">Эмодзи</string>
+    <string name="key_emoji_prev">Предыдущая страница</string>
+    <string name="key_emoji_next">Следующая страница</string>
+    <string name="key_tutuq">тутук белгиси</string>
 </resources>

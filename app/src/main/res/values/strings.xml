@@ -27,4 +27,27 @@
     <string name="privacy_title">Maxfiylik</string>
     <string name="privacy_body">• Ilovada internetga ruxsat yöq: maʼlumot heç qayerga yuborilmaydi.\n• Parol va PIN-kod maydonlarida klaviatura matnni öqimaydi va tavsiya bermaydi.\n• Yozilgan matn saqlanmaydi va jurnalga yozilmaydi.\n• «eski→yangi» tugmasi faqat siz bosganingizda işlaydi.</string>
     <string name="footer">Alifbo: 21.10.2026 dagi O‘RQ-1184-son Qonun. Versiya %1$s</string>
+
+    <string name="settings_title">Sozlamalar</string>
+    <string name="setting_vibration">Bosilganda tebraniş</string>
+    <string name="setting_sound">Tugma ovozi</string>
+    <string name="setting_preview">Bosilgan harfni kattalaştirib körsatiş</string>
+    <string name="setting_suggestions">Söz tavsiyalari</string>
+    <string name="setting_height">Tugmalar balandligi</string>
+    <string name="height_small">Past</string>
+    <string name="height_medium">Örtaça</string>
+    <string name="height_large">Baland</string>
+    <string name="dictionary_credits">Luğat manbalari: Özbek Vikipediyasi va OpenSubtitles (FrequencyWords), CC BY-SA 4.0.</string>
+
+    <string name="key_shift">Katta harf</string>
+    <string name="key_backspace">Öçiriş</string>
+    <string name="key_enter">Kiritiş</string>
+    <string name="key_space">Probel</string>
+    <string name="key_symbols">Raqamlar va belgilar</string>
+    <string name="key_letters">Harflar</string>
+    <string name="key_language">Tilni almaştiriş</string>
+    <string name="key_emoji">Emoji</string>
+    <string name="key_emoji_prev">Oldingi sahifa</string>
+    <string name="key_emoji_next">Keyingi sahifa</string>
+    <string name="key_tutuq">tutuq belgisi</string>
 </resources>
