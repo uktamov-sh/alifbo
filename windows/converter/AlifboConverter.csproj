@@ -9,7 +9,7 @@
     <AssemblyName>AlifboConverter</AssemblyName>
     <RootNamespace>Alifbo</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Product>Alifbo</Product>
     <Description>Alifbo: eski matnni yangi özbek alifbosiga öğiriş (Ctrl+Shift+Y)</Description>
     <Copyright>GPL-3.0, https://github.com/uktamov-sh/alifbo</Copyright>

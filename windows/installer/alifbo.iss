@@ -1,7 +1,7 @@
 ﻿; Установщик Alifbo для Windows: раскладка «Özbek (yangi alifbo)» и конвертер в трее.
 ; Собирается скриптом windows/installer/build-installer.ps1 после windows/build.ps1.
 
-#define AppVersion "0.1.0"
+#define AppVersion "0.1.1"
 
 [Setup]
 AppId={{AAB176E6-F487-4873-939D-BB659F8A9692}

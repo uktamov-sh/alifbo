@@ -32,13 +32,13 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 
 ## Android
 
-Скачайте `alifbo-0.1.0.apk` из [выпусков](https://github.com/uktamov-sh/alifbo/releases), установите,
+Скачайте `alifbo-0.1.1.apk` из [выпусков](https://github.com/uktamov-sh/alifbo/releases), установите,
 откройте приложение и следуйте трём шагам на экране. Отпечаток сертификата подписи (SHA-256):
 `f6:56:a0:83:5b:65:c1:ac:67:0e:61:b2:8e:67:fe:22:20:fc:61:c0:2d:4c:71:42:55:99:48:7c:ae:a4:20:2d`.
 
 ## Windows
 
-Скачайте `alifbo-setup-0.1.0.exe` из [выпусков](https://github.com/uktamov-sh/alifbo/releases) и
+Скачайте `alifbo-setup-0.1.1.exe` из [выпусков](https://github.com/uktamov-sh/alifbo/releases) и
 запустите. Установщик ставит раскладку и конвертер, а удаляется обычным способом через «Приложения».
 Переключайтесь на раскладку сочетанием Win + Пробел.
 

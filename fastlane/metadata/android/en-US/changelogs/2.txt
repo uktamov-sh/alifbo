@@ -1,0 +1,1 @@
+Fix: in the Russian layout, long-pressing "е" with Shift now types a capital "Ё" instead of "ё".
