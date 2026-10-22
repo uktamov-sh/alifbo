@@ -20,9 +20,38 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
   «eski→yangi», которая переписывает старую латиницу и кириллицу на новый алфавит. Android 8.0+.
 - **Конвертер** (`converter`): библиотека на Kotlin без зависимостей. Правила описаны в
   [spec/converter-rules.md](spec/converter-rules.md).
+- **Раскладка Windows** (`windows`): системная раскладка «Özbek (yangi alifbo)» для Windows 10 и 11,
+  x64 и ARM64.
 - **Прототип** (`prototype`): страница, где можно попробовать раскладки Android и Windows и конвертер.
 
-Раскладка для Windows ещё в работе.
+## Windows
+
+Основа — американская раскладка. Пять клавиш справа дают новые буквы, а прежние символы
+доступны через AltGr (правый Alt):
+
+| Клавиша | Обычно | Shift | AltGr | AltGr + Shift |
+|---|---|---|---|---|
+| `[` | ğ | Ğ | `[` | `{` |
+| `]` | ö | Ö | `]` | `}` |
+| `\` | ç | Ç | `\` | `\|` |
+| `;` | ş | Ş | `;` | `:` |
+| `'` | ʼ | `"` | `'` | |
+
+Установка:
+
+1. Скачайте `alifbo-windows` из последней успешной сборки во вкладке
+   [Actions](https://github.com/uktamov-sh/alifbo/actions/workflows/ci.yml) и распакуйте.
+2. Откройте PowerShell от имени администратора в этой папке.
+3. Запустите:
+   ```powershell
+   Get-ChildItem -Recurse | Unblock-File
+   powershell -ExecutionPolicy Bypass -File .\install.ps1
+   ```
+4. Переключайтесь на раскладку сочетанием Win + Пробел.
+
+Установщик сверяет файлы с `SHA256SUMS` и ничего не скачивает. Удаление: `uninstall.ps1` так же,
+от имени администратора. Пакет пока не подписан цифровой подписью, поэтому Windows может
+предупредить о неизвестном издателе.
 
 ## Безопасность
 
