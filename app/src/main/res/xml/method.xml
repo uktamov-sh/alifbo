@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="uz.alifbo.keyboard.MainActivity"
+    android:supportsSwitchingToNextInputMethod="true">
+    <subtype
+        android:imeSubtypeLocale="uz"
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="true"
+        android:label="@string/subtype_uz"
+        android:languageTag="uz-Latn" />
+    <subtype
+        android:imeSubtypeLocale="ru"
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="false"
+        android:label="@string/subtype_ru"
+        android:languageTag="ru" />
+</input-method>

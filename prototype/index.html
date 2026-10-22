@@ -1,0 +1,500 @@
+<meta charset="utf-8">
+<title>Alifbo klaviaturasi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: одна колонка-лист; каждая секция — живой макет (телефон, клавиатура ПК, конвертер), рядом короткие пояснения */
+:root {
+  --bg: #f2f4f8;
+  --surface: #ffffff;
+  --ink: #131a2c;
+  --muted: #5a637c;
+  --line: #d8dde9;
+  --lapis: #1e3c9e;
+  --turq: #0e8f87;
+  --turq-soft: #dff3f1;
+  --kbd: #dfe3ec;
+  --key: #ffffff;
+  --key2: #c4cbdb;
+  --key-shadow: #9aa3b8;
+  --display: "Unbounded", "Segoe UI", system-ui, sans-serif;
+  --body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1020; --surface: #151a2c; --ink: #e7eaf4; --muted: #9aa2bc; --line: #283050;
+    --lapis: #8aa2ff; --turq: #45d1c5; --turq-soft: #12302e;
+    --kbd: #1b2136; --key: #2b3250; --key2: #222840; --key-shadow: #0a0d18;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1020; --surface: #151a2c; --ink: #e7eaf4; --muted: #9aa2bc; --line: #283050;
+  --lapis: #8aa2ff; --turq: #45d1c5; --turq-soft: #12302e;
+  --kbd: #1b2136; --key: #2b3250; --key2: #222840; --key-shadow: #0a0d18;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 56px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.05; }
+h2 { font-size: clamp(1.25rem, 2.6vw, 1.6rem); font-weight: 500; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--muted); font-size: 1.05rem; }
+section { display: grid; gap: 20px; min-width: 0; }
+.sec-head { display: grid; gap: 8px; }
+.hero { display: grid; gap: 16px; }
+.hero h1 .acc { color: var(--turq); }
+.status { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+.chip.ok { border-color: var(--turq); color: var(--turq); }
+
+/* Алфавит */
+.alphabet { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
+.letter { display: grid; place-items: center; gap: 0; padding: 10px 0 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.letter b { font-family: var(--display); font-weight: 500; font-size: 1.3rem; line-height: 1.1; }
+.letter small { font-family: var(--mono); font-size: 11px; color: var(--muted); min-height: 1.3em; }
+.letter.new { border-color: var(--turq); background: var(--turq-soft); }
+.letter.new b, .letter.new small { color: var(--turq); }
+
+/* Android */
+.android { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 32px; align-items: start; }
+.phone { width: 100%; max-width: 380px; border-radius: 34px; border: 1px solid var(--line); background: var(--surface); padding: 14px 10px 10px; display: grid; gap: 10px; box-shadow: 0 18px 40px -24px rgba(19, 26, 44, 0.45); }
+.field { min-height: 120px; max-height: 160px; overflow-y: auto; margin: 4px 6px 0; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); font-size: 17px; white-space: pre-wrap; word-break: break-word; }
+.field .ph { color: var(--muted); }
+.caret { display: inline-block; width: 2px; height: 1.15em; vertical-align: text-bottom; background: var(--lapis); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.kbd { background: var(--kbd); border-radius: 0 0 24px 24px; padding: 6px 4px 10px; display: grid; gap: 8px; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.sugg { display: flex; align-items: stretch; height: 38px; border-bottom: 1px solid var(--line); }
+.sugg button { flex: 1; min-width: 0; border: 0; background: none; color: var(--ink); font: 500 15px var(--body); cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sugg button + button { border-left: 1px solid var(--line); }
+.sugg .conv { flex: 0 0 auto; padding: 0 12px; color: var(--turq); font-family: var(--mono); font-size: 13px; }
+.row { display: flex; gap: 5px; padding: 0 2px; }
+.k { flex: 1 1 0; min-width: 0; height: 46px; border: 0; border-radius: 7px; background: var(--key); color: var(--ink); font: 400 20px var(--body); box-shadow: 0 1px 0 var(--key-shadow); cursor: pointer; position: relative; padding: 0; display: grid; place-items: center; }
+.k.sp { background: var(--key2); font-size: 14px; font-weight: 500; flex-grow: 1.5; }
+.k.space { flex-grow: 5; font-size: 13px; color: var(--muted); }
+.k.enter { background: var(--lapis); color: var(--surface); flex-grow: 1.5; }
+.k.new { color: var(--turq); font-weight: 600; }
+.k.on { background: var(--lapis); color: var(--surface); }
+.k:active, .k.down { filter: brightness(0.88); }
+.k sup { position: absolute; top: 2px; right: 4px; font: 10px var(--mono); color: var(--muted); }
+.notes { display: grid; gap: 14px; }
+.notes ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 60ch; }
+.notes li::marker { color: var(--turq); }
+code, kbd { font-family: var(--mono); font-size: 0.9em; }
+
+/* Windows */
+.pc-scroll { overflow-x: auto; padding-bottom: 6px; }
+.pc { min-width: 760px; background: var(--kbd); border-radius: 14px; padding: 12px; display: grid; gap: 6px; user-select: none; -webkit-user-select: none; }
+.pc .r { display: flex; gap: 6px; }
+.pk { flex: 1 1 0; min-width: 0; height: 52px; border-radius: 6px; background: var(--key); box-shadow: 0 2px 0 var(--key-shadow); border: 0; color: var(--ink); cursor: pointer; position: relative; font: 500 15px var(--body); padding: 0; }
+.pk .main { position: absolute; left: 8px; bottom: 6px; }
+.pk .shift { position: absolute; left: 8px; top: 5px; font-size: 12px; color: var(--muted); }
+.pk .alt { position: absolute; right: 7px; bottom: 6px; font: 11px var(--mono); color: var(--lapis); }
+.pk.fn { background: var(--key2); font-size: 12px; color: var(--muted); }
+.pk.new { background: var(--turq-soft); outline: 1.5px solid var(--turq); outline-offset: -1.5px; }
+.pk.new .main { color: var(--turq); font-family: var(--display); font-size: 17px; bottom: 5px; }
+.pk.on { background: var(--lapis); color: var(--surface); }
+.pk.down { transform: translateY(2px); box-shadow: none; }
+textarea { width: 100%; min-height: 90px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: 17px/1.5 var(--body); padding: 12px 14px; }
+textarea:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+
+/* Конвертер */
+.conv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.conv-grid label { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.out { min-height: 150px; border: 1px solid var(--turq); border-radius: 10px; background: var(--turq-soft); padding: 12px 14px; font-size: 17px; white-space: pre-wrap; word-break: break-word; color: var(--ink); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 8px 14px; font: 500 14px var(--body); cursor: pointer; }
+.btn.primary { background: var(--lapis); border-color: var(--lapis); color: var(--surface); }
+.small { font-size: 14px; color: var(--muted); }
+
+/* Безопасность */
+.sec-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 640px) { .sec-grid { grid-template-columns: minmax(0, 1fr); } }
+.card { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px 20px; display: grid; gap: 10px; align-content: start; }
+.card h3 { margin: 0; font: 600 16px var(--body); }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 15px; }
+.card li::marker { color: var(--turq); }
+
+footer { color: var(--muted); font-size: 14px; display: grid; gap: 4px; }
+footer a { color: var(--lapis); }
+
+@media (max-width: 760px) {
+  .android, .conv-grid { grid-template-columns: minmax(0, 1fr); }
+  .phone { margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Прототип · Android + Windows</span>
+    <h1>Alifbo — klaviatura<br>yangi <span class="acc">özbek</span> alifbosi uçun</h1>
+    <p class="lead">Клавиатура на новом узбекском латинском алфавите. Ş, Ç, Ö и Ğ стоят прямо на основных рядах, без долгих нажатий. Здесь можно попробовать раскладки и конвертер до начала разработки.</p>
+    <div class="status">
+      <span class="chip ok">Закон O‘RQ-1184 от 21.10.2026</span>
+      <span class="chip">Вступает в силу 22.04.2027</span>
+      <span class="chip">28 букв + тутук белгиси</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Алфавит по тексту закона</span>
+      <h2>28 букв и знак ʼ</h2>
+      <p class="lead">Бирюзовым отмечены новые буквы, под ними старое написание. Буквы C в алфавите нет, а сочетание ng больше не считается отдельной буквой.</p>
+    </div>
+    <div class="alphabet" id="alphabet"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Android</span>
+      <h2>Экранная клавиатура</h2>
+    </div>
+    <div class="android">
+      <div class="phone">
+        <div class="field" id="phoneField" aria-live="polite"></div>
+        <div class="kbd" id="phoneKbd">
+          <div class="sugg" id="sugg"></div>
+          <div id="phoneRows"></div>
+        </div>
+      </div>
+      <div class="notes">
+        <p>Нажимайте клавиши мышью или пальцем. Всё работает как на настоящем телефоне.</p>
+        <ul>
+          <li>По 11 клавиш в ряду, как в турецкой раскладке Gboard. Ğ в верхнем ряду, Ş и ʼ в среднем, Ö и Ç в нижнем.</li>
+          <li>W и C оставлены: они нужны для имён, адресов сайтов и почты.</li>
+          <li>Долгое нажатие на верхний ряд вводит цифры. На русской раскладке долгое <kbd>е</kbd> даёт <kbd>ё</kbd>, долгое <kbd>ь</kbd> даёт <kbd>ъ</kbd>.</li>
+          <li>Двойное нажатие на ⇧ включает Caps Lock. После точки следующая буква сама становится заглавной.</li>
+          <li><kbd>🌐</kbd> переключает узбекский и русский.</li>
+          <li>Кнопка <kbd>eski→yangi</kbd> в полосе подсказок переписывает набранный текст со старой латиницы или кириллицы на новую. Текст всегда считается старым, даже если в нём уже есть Ş или Ç.</li>
+          <li>Подсказки слов пока работают на небольшом демо-словаре. В приложении будет полный словарь.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Windows</span>
+      <h2>Раскладка для обычной клавиатуры</h2>
+      <p class="lead">Обычная американская раскладка, в которой пять клавиш справа заменены новыми буквами. Вытесненные символы остаются доступны через AltGr (правый Alt).</p>
+    </div>
+    <div class="pc-scroll"><div class="pc" id="pc"></div></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--turq-soft);outline:1.5px solid var(--turq)"></i>Новая буква</span>
+      <span><i class="sw" style="background:var(--key);box-shadow:inset 0 0 0 1px var(--line)"></i>Как в обычной английской раскладке</span>
+      <span><b style="color:var(--lapis);font:12px var(--mono)">[</b> символ через AltGr</span>
+    </div>
+    <label class="small" for="winInput">Кликните в поле и печатайте на своей клавиатуре. Раскладка Windows при этом может быть любой, прототип перехватывает нажатия.</label>
+    <textarea id="winInput" placeholder="Masalan: Özbekiston, şahar, çoy, ğişt, maʼno"></textarea>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Конвертер</span>
+      <h2>Старый текст → новый алфавит</h2>
+      <p class="lead">Вставьте текст старой латиницей или кириллицей. Алфавит определяется автоматически.</p>
+    </div>
+    <div class="conv-grid">
+      <label for="convIn">Исходный текст
+        <textarea id="convIn" rows="6"></textarea>
+      </label>
+      <div style="display:grid;gap:6px;min-width:0">
+        <span class="small" id="convDetected">Новый алфавит</span>
+        <div class="out" id="convOut"></div>
+      </div>
+    </div>
+    <div class="btns">
+      <button class="btn" id="exLatin" type="button">Пример: старая латиница</button>
+      <button class="btn" id="exCyr" type="button">Пример: кириллица</button>
+      <button class="btn primary" id="copyOut" type="button">Скопировать результат</button>
+      <span class="small" id="copyMsg" role="status"></span>
+    </div>
+    <p class="small">Правила те же, что в библиотеке для Android, и проверены на 80 эталонных примерах. Адреса сайтов и почты не меняются. Слова вроде «Is'hoq», где s и h читаются раздельно, обрабатываются по апострофу. Английские слова с sh и ch («shop») пока тоже переписываются, это исправит словарь исключений.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Безопасность</span>
+      <h2>Клавиатура видит всё, поэтому ничего не хранит и никуда не отправляет</h2>
+      <p class="lead">Клавиатура проходит через пароли, карты и переписку. Поэтому защита заложена в устройство приложения, а не добавлена потом.</p>
+    </div>
+    <div class="sec-grid">
+      <div class="card">
+        <h3>Без интернета</h3>
+        <ul>
+          <li>В Android-приложении нет разрешения на доступ в интернет. Отправить что-то наружу невозможно технически, и пользователь может проверить это в настройках телефона.</li>
+          <li>Нет аналитики, рекламы, сторонних SDK и облачной синхронизации.</li>
+          <li>Словарь и подсказки работают только на устройстве.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Пароли и приватность</h3>
+        <ul>
+          <li>В полях паролей, номеров карт и PIN-кодов подсказки и запоминание слов отключаются полностью.</li>
+          <li>В режиме инкогнито приложений (флаг <code>NO_PERSONALIZED_LEARNING</code>) клавиатура ничего не запоминает.</li>
+          <li>Набранный текст не попадает в логи. Выученные слова хранятся в зашифрованном виде и удаляются одной кнопкой.</li>
+          <li>Конвертер работает только по нажатию и не читает буфер обмена сам.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Windows</h3>
+        <ul>
+          <li>Раскладка — это системная таблица клавиш без программного кода, она не может видеть или передавать текст.</li>
+          <li>Конвертер в трее работает локально и без сети. Он срабатывает только по горячей клавише.</li>
+          <li>Установщик подписан цифровой подписью, рядом публикуются контрольные суммы.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Проверяемость</h3>
+        <ul>
+          <li>Открытый исходный код на GitHub. Любой может убедиться, что клавиатура ничего не собирает. Для портфолио это тоже плюс.</li>
+          <li>Минимум зависимостей, закреплённые версии, автоматическая проверка уязвимостей в CI.</li>
+          <li>Подписанные релизы и публикация в F-Droid, где сборку проверяют независимо.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Источник алфавита: <a href="https://www.lex.uz/uz/doc-passport/8548754" target="_blank" rel="noopener">lex.uz, O‘RQ-1184 от 21.10.2026</a>.</span>
+    <span>Знак тутук белгиси в прототипе вводится как ʼ (U+02BC). Точный символ сверим с официальным текстом перед релизом.</span>
+  </footer>
+</div>
+
+<script src="converter.js"></script>
+<script>
+(() => {
+  const TUTUQ = AlifboConverter.TUTUQ;
+
+  // ---------- Алфавит ----------
+  const ALPHABET = ["A","B","D","E","F","G",["Ğ","Gʻ"],"H","I","J","K","L","M","N","O",["Ö","Oʻ"],"P","Q","R","S",["Ş","Sh"],["Ç","Ch"],"T","U","V","X","Y","Z",[TUTUQ,"тутук"]];
+  document.getElementById("alphabet").innerHTML = ALPHABET.map(l => {
+    if (Array.isArray(l)) {
+      const isNew = l[1] !== "тутук";
+      return `<div class="letter${isNew ? " new" : ""}"><b>${l[0]}${isNew ? " " + l[0].toLowerCase() : ""}</b><small>${l[1]}</small></div>`;
+    }
+    return `<div class="letter"><b>${l} ${l.toLowerCase()}</b><small></small></div>`;
+  }).join("");
+
+  // ---------- Конвертер ----------
+  const hasCyr = s => /[а-яёўқғҳ]/i.test(s);
+  const convert = AlifboConverter.toNewLatin;
+
+  const convIn = document.getElementById("convIn");
+  const convOut = document.getElementById("convOut");
+  const convDetected = document.getElementById("convDetected");
+  const EX_LAT = "Oʻzbekiston Respublikasi poytaxti — Toshkent shahri.\nChoyxonada choy ichdik, g‘isht uyda yashaymiz.\nIs'hoq ma'no va san'at haqida so'zladi.";
+  const EX_CYR = "Ўзбекистон Республикаси пойтахти — Тошкент шаҳри.\nЧойхонада чой ичдик, ғишт уйда яшаймиз.\nИсҳоқ цирк ва маъно ҳақида сўзлади. ЎЗБЕКИСТОН";
+  function runConv() {
+    convOut.textContent = convert(convIn.value);
+    convDetected.textContent = convIn.value.trim() === "" ? "Новый алфавит" : hasCyr(convIn.value) ? "Новый алфавит · исходник: кириллица" : "Новый алфавит · исходник: латиница";
+  }
+  convIn.value = EX_LAT; runConv();
+  convIn.addEventListener("input", runConv);
+  document.getElementById("exLatin").onclick = () => { convIn.value = EX_LAT; runConv(); };
+  document.getElementById("exCyr").onclick = () => { convIn.value = EX_CYR; runConv(); };
+  const copyMsg = document.getElementById("copyMsg");
+  document.getElementById("copyOut").onclick = () => {
+    const text = convOut.textContent;
+    navigator.clipboard.writeText(text).then(() => { copyMsg.textContent = "Скопировано"; }).catch(() => {
+      const r = document.createRange(); r.selectNodeContents(convOut);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      copyMsg.textContent = "Текст выделен, нажмите Ctrl+C";
+    });
+  };
+
+  // ---------- Android ----------
+  const DIGITS = ["1","2","3","4","5","6","7","8","9","0"];
+  const LAYOUTS = {
+    uz: [["q","w","e","r","t","y","u","i","o","p","ğ"],["a","s","d","f","g","h","j","k","l","ş",TUTUQ],["SHIFT","z","x","c","v","b","n","m","ö","ç","BKSP"],["SYM","LANG",",","SPACE",".","ENTER"]],
+    ru: [["й","ц","у","к","е","н","г","ш","щ","з","х"],["ф","ы","в","а","п","р","о","л","д","ж","э"],["SHIFT","я","ч","с","м","и","т","ь","б","ю","BKSP"],["SYM","LANG",",","SPACE",".","ENTER"]],
+    sym: [DIGITS,["@","#","$","%","&","-","+","(",")","/"],["SYM2","*","\"","'",":",";","!","?","BKSP"],["ABC","LANG",",","SPACE",".","ENTER"]],
+  };
+  const NEW_KEYS = new Set(["ğ","ş","ö","ç",TUTUQ]);
+  const LONG = { "е":"ё","ь":"ъ", [TUTUQ]:"'" };
+  LAYOUTS.uz[0].slice(0, 10).forEach((k, i) => LONG[k] ??= DIGITS[i]);
+  LAYOUTS.ru[0].slice(0, 10).forEach((k, i) => LONG[k] ??= DIGITS[i]);
+  const WORDS = ["salom","rahmat","yaxşi","kitob","maktab","Özbekiston","özbek","til","alifbo","şahar","Toşkent","Samarqand","çoy","çoyxona","çiroyli","çunki","ğalaba","ğişt","ğoya","öqituvçi","öquvçi","örgan","kun","yangi","ming","rang","keng","iş","işla","kişi","bola","bolalar","ota","ona","oila","uy","suv","non","maʼno","sanʼat","taʼlim","telefon","klaviatura","harf","söz","sözlar","qişloq","dunyo","hayot","vaqt","bugun","ertaga","kecha","xayr","iltimos","yöq","bor","kerak","mumkin","juda","katta","kiçik","öyin","göşt",
+    "привет","спасибо","хорошо","сегодня","завтра","работа","клавиатура","алфавит","пожалуйста","здравствуйте"];
+
+  let lang = "uz", page = "abc", shift = 1, lastShiftTap = 0, text = "";
+  const field = document.getElementById("phoneField");
+  const rowsEl = document.getElementById("phoneRows");
+  const suggEl = document.getElementById("sugg");
+
+  const keyLabel = k => ({ SHIFT: "⇧", BKSP: "⌫", SYM: "?123", SYM2: "=\\<", ABC: "ABC", LANG: "🌐", SPACE: lang === "uz" ? "Özbekça" : "Русский", ENTER: "↵" }[k] ?? (shift && page === "abc" ? k.toUpperCase() : k));
+  function renderKeys() {
+    const layout = page === "sym" ? LAYOUTS.sym : LAYOUTS[lang];
+    rowsEl.innerHTML = layout.map(row => `<div class="row">${row.map(k => {
+      const cls = ["k"];
+      if (["SHIFT","BKSP","SYM","SYM2","ABC","LANG"].includes(k)) cls.push("sp");
+      if (k === "SPACE") cls.push("space");
+      if (k === "ENTER") cls.push("enter");
+      if (k === "SHIFT" && shift) cls.push("on");
+      if (NEW_KEYS.has(k) && page === "abc") cls.push("new");
+      const hint = page === "abc" && LONG[k] ? `<sup>${LONG[k]}</sup>` : "";
+      return `<button type="button" class="${cls.join(" ")}" data-k="${k.replace(/"/g, "&quot;")}" aria-label="${keyLabel(k)}">${keyLabel(k)}${hint}</button>`;
+    }).join("")}</div>`).join("");
+    const lock = shift === 2;
+    const sh = rowsEl.querySelector('[data-k="SHIFT"]');
+    if (sh && lock) sh.textContent = "⇪";
+  }
+  function currentWord() { const m = text.match(/[\p{L}ʼ]+$/u); return m ? m[0] : ""; }
+  function renderField() {
+    field.innerHTML = text ? escapeHtml(text) + '<span class="caret"></span>' : '<span class="caret"></span><span class="ph"> Yozing…</span>';
+    field.scrollTop = field.scrollHeight;
+    const w = currentWord().toLowerCase();
+    const list = w ? WORDS.filter(x => x.toLowerCase().startsWith(w) && x.toLowerCase() !== w).slice(0, 3) : [];
+    suggEl.innerHTML = `<button type="button" class="conv" data-s="__conv">eski→yangi</button>` +
+      (list.length ? list.map(x => `<button type="button" data-s="${x}">${x}</button>`).join("") : `<button type="button" disabled style="color:var(--muted);font-weight:400">подсказки</button>`);
+  }
+  const escapeHtml = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  function autoShift() {
+    if (shift === 2) return;
+    shift = (text === "" || /[.!?]\s$/.test(text) || /\n$/.test(text)) ? 1 : 0;
+  }
+  function type(ch) {
+    if (shift && page === "abc") ch = ch.toUpperCase();
+    text += ch;
+    if (shift === 1) shift = 0;
+    autoShift();
+  }
+  function press(k, long) {
+    if (long && LONG[k]) { text += LONG[k]; if (shift === 1) shift = 0; autoShift(); }
+    else if (k === "SHIFT") {
+      const now = Date.now();
+      if (now - lastShiftTap < 320) shift = 2; else shift = shift ? 0 : 1;
+      lastShiftTap = now;
+    }
+    else if (k === "BKSP") { text = Array.from(text).slice(0, -1).join(""); autoShift(); }
+    else if (k === "SPACE") { text += " "; autoShift(); }
+    else if (k === "ENTER") { text += "\n"; autoShift(); }
+    else if (k === "SYM") page = "sym";
+    else if (k === "ABC") { page = "abc"; autoShift(); }
+    else if (k === "SYM2") return;
+    else if (k === "LANG") { lang = lang === "uz" ? "ru" : "uz"; page = "abc"; }
+    else type(k);
+    renderKeys(); renderField();
+  }
+  let timer = null, longFired = false, downKey = null;
+  rowsEl.addEventListener("pointerdown", e => {
+    const b = e.target.closest(".k"); if (!b) return;
+    e.preventDefault();
+    downKey = b.dataset.k; longFired = false; b.classList.add("down");
+    if (LONG[downKey] && page === "abc") timer = setTimeout(() => { longFired = true; press(downKey, true); }, 420);
+  });
+  const release = e => {
+    clearTimeout(timer);
+    if (downKey === null) return;
+    const k = downKey; downKey = null;
+    rowsEl.querySelectorAll(".down").forEach(x => x.classList.remove("down"));
+    if (!longFired && e.type === "pointerup") press(k, false);
+  };
+  rowsEl.addEventListener("pointerup", release);
+  rowsEl.addEventListener("pointerleave", release);
+  rowsEl.addEventListener("pointercancel", release);
+  suggEl.addEventListener("click", e => {
+    const b = e.target.closest("button[data-s]"); if (!b) return;
+    if (b.dataset.s === "__conv") text = AlifboConverter.toNewLatin(text, { assumeOldLatin: true });
+    else text = text.slice(0, text.length - currentWord().length) + b.dataset.s + " ";
+    autoShift(); renderKeys(); renderField();
+  });
+  renderKeys(); renderField();
+
+  // ---------- Windows ----------
+  // [code, обычный, с Shift, AltGr, AltGr+Shift, новая буква?]
+  const L = c => [c, c.toLowerCase(), c];
+  const PC = [
+    [["Backquote","`","~"],["Digit1","1","!"],["Digit2","2","@"],["Digit3","3","#"],["Digit4","4","$"],["Digit5","5","%"],["Digit6","6","^"],["Digit7","7","&"],["Digit8","8","*"],["Digit9","9","("],["Digit0","0",")"],["Minus","-","_"],["Equal","=","+"],["Backspace","⌫",null,null,null,false,1.8]],
+    [["Tab","Tab",null,null,null,false,1.5],...["Q","W","E","R","T","Y","U","I","O","P"].map(c => ["Key" + c, c.toLowerCase(), c]),["BracketLeft","ğ","Ğ","[","{",true],["BracketRight","ö","Ö","]","}",true],["Backslash","ç","Ç","\\","|",true,1.3]],
+    [["CapsLock","Caps",null,null,null,false,1.8],...["A","S","D","F","G","H","J","K","L"].map(c => ["Key" + c, c.toLowerCase(), c]),["Semicolon","ş","Ş",";",":",true],["Quote",TUTUQ,"\"","'",null,true],["Enter","Enter",null,null,null,false,2]],
+    [["ShiftLeft","Shift",null,null,null,false,2.4],...["Z","X","C","V","B","N","M"].map(c => ["Key" + c, c.toLowerCase(), c]),["Comma",",","<"],["Period",".",">"],["Slash","/","?"],["ShiftRight","Shift",null,null,null,false,2.6]],
+    [["ControlLeft","Ctrl",null,null,null,false,1.4],["MetaLeft","Win",null,null,null,false,1.4],["AltLeft","Alt",null,null,null,false,1.4],["Space","",null,null,null,false,7],["AltRight","AltGr",null,null,null,false,1.4],["ControlRight","Ctrl",null,null,null,false,1.4]],
+  ];
+  const PCMAP = {};
+  PC.flat().forEach(k => PCMAP[k[0]] = k);
+  const pcEl = document.getElementById("pc");
+  let vShift = false, vAlt = false;
+  function renderPC() {
+    pcEl.innerHTML = PC.map(row => `<div class="r">${row.map(([code, n, s, a, as, isNew, w]) => {
+      const fn = s === null;
+      const cls = ["pk"];
+      if (fn) cls.push("fn");
+      if (isNew) cls.push("new");
+      if ((code.startsWith("Shift") && vShift) || (code === "AltRight" && vAlt)) cls.push("on");
+      const style = w ? ` style="flex-grow:${w}"` : "";
+      const isLetter = /^Key/.test(code) || (isNew && s === n.toUpperCase());
+      const inner = fn ? `<span class="main">${n}</span>`
+        : `${!isLetter && s !== n.toUpperCase() ? `<span class="shift">${escapeHtml(s)}</span>` : ""}<span class="main">${escapeHtml(isLetter ? s : n)}</span>${a ? `<span class="alt">${escapeHtml(a)}</span>` : ""}`;
+      return `<button type="button" tabindex="-1" class="${cls.join(" ")}" data-code="${code}"${style}>${inner}</button>`;
+    }).join("")}</div>`).join("");
+  }
+  renderPC();
+  const win = document.getElementById("winInput");
+  function insert(str) {
+    const st = win.selectionStart, en = win.selectionEnd;
+    win.setRangeText(str, st, en, "end");
+    win.focus();
+  }
+  function pcChar(code, shiftOn, altOn, caps) {
+    const k = PCMAP[code]; if (!k) return null;
+    const [, n, s, a, as] = k;
+    if (code === "Space") return " ";
+    if (code === "Enter") return "\n";
+    if (code === "Tab") return "\t";
+    if (s === null) return null;
+    if (altOn) return shiftOn ? (as ?? null) : (a ?? null);
+    const letter = n !== s && n.toUpperCase() === s;
+    const up = letter ? (shiftOn !== caps) : shiftOn;
+    return up ? s : n;
+  }
+  function flash(code) {
+    const b = pcEl.querySelector(`[data-code="${code}"]`);
+    if (!b) return;
+    b.classList.add("down"); setTimeout(() => b.classList.remove("down"), 110);
+  }
+  win.addEventListener("keydown", e => {
+    if (e.metaKey || (e.ctrlKey && !e.altKey)) return; // Ctrl+C/V/A и т.п. работают как обычно
+    const altOn = e.getModifierState("AltGraph") || (e.ctrlKey && e.altKey);
+    flash(e.code);
+    if (e.code === "Backspace" || e.code.startsWith("Arrow") || e.code === "Delete") return;
+    const ch = pcChar(e.code, e.shiftKey, altOn, e.getModifierState("CapsLock"));
+    if (ch === null) { if (PCMAP[e.code] && PCMAP[e.code][2] !== null) e.preventDefault(); return; }
+    e.preventDefault();
+    insert(ch);
+  });
+  pcEl.addEventListener("click", e => {
+    const b = e.target.closest(".pk"); if (!b) return;
+    const code = b.dataset.code;
+    if (code.startsWith("Shift")) { vShift = !vShift; renderPC(); return; }
+    if (code === "AltRight") { vAlt = !vAlt; renderPC(); return; }
+    if (code === "Backspace") {
+      const st = win.selectionStart, en = win.selectionEnd;
+      if (st === en && st > 0) win.setRangeText("", st - 1, en, "end"); else win.setRangeText("", st, en, "end");
+      win.focus(); return;
+    }
+    const ch = pcChar(code, vShift, vAlt, false);
+    if (ch === null) return;
+    insert(ch);
+    if (vShift || vAlt) { vShift = false; vAlt = false; renderPC(); }
+    flash(code);
+  });
+})();
+</script>

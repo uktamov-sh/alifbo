@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Палитра как в прототипе: лазурит и бирюза. Тёмная тема — в values-night. -->
+<resources>
+    <color name="keyboard_bg">#DFE3EC</color>
+    <color name="key">#FFFFFF</color>
+    <color name="key_special">#C4CBDB</color>
+    <color name="key_pressed">#AEB7CC</color>
+    <color name="key_shadow">#9AA3B8</color>
+    <color name="accent">#1E3C9E</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="ink">#131A2C</color>
+    <color name="muted">#5A637C</color>
+    <color name="new_letter">#0E8F87</color>
+    <color name="page_bg">#F2F4F8</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="icon_bg">#1E3C9E</color>
+</resources>

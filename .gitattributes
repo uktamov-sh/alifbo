@@ -1,0 +1,5 @@
+# В репозитории переносы строк LF: иначе gradlew не запустится на Linux и macOS.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.jar binary
+*.png binary

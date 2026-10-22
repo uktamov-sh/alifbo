@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="keyboard_bg">#1B2136</color>
+    <color name="key">#2B3250</color>
+    <color name="key_special">#222840</color>
+    <color name="key_pressed">#3A4366</color>
+    <color name="key_shadow">#0A0D18</color>
+    <color name="accent">#8AA2FF</color>
+    <color name="on_accent">#0C1020</color>
+    <color name="ink">#E7EAF4</color>
+    <color name="muted">#9AA2BC</color>
+    <color name="new_letter">#45D1C5</color>
+    <color name="page_bg">#0C1020</color>
+    <color name="surface">#151A2C</color>
+</resources>

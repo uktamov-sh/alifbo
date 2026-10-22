@@ -1,0 +1,108 @@
+# Эталонные примеры конвертера: «исходный текст → ожидаемый результат».
+# Строки с # и пустые строки пропускаются. \n в тексте означает перенос строки.
+
+# --- Старая латиница: Oʻ и Gʻ с разными апострофами ---
+Oʻzbekiston → Özbekiston
+O'zbekiston → Özbekiston
+O‘zbekiston → Özbekiston
+O’zbekiston → Özbekiston
+O`zbekiston → Özbekiston
+Oʼzbekiston → Özbekiston
+oʻgʻil → öğil
+Gʻisht → Ğişt
+gʻalaba → ğalaba
+OʻZBEKISTON → ÖZBEKISTON
+O'ZBEKISTON → ÖZBEKISTON
+
+# --- Sh и Ch ---
+shahar → şahar
+Shahar → Şahar
+SHAHAR → ŞAHAR
+choy → çoy
+Choyxona → Çoyxona
+CHOY → ÇOY
+Toshkent → Toşkent
+TOSHKENT → TOŞKENT
+o'qituvchi → öqituvçi
+
+# --- Раздельное чтение s'h и тутук белгиси ---
+Is'hoq → Ishoq
+Isʼhoq → Ishoq
+IS'HOQ → ISHOQ
+ma'no → maʼno
+san'at → sanʼat
+taʼlim → taʼlim
+mo''jiza → möʼjiza
+moʻʼjiza → möʼjiza
+
+# --- Ng не меняется ---
+ming → ming
+dengiz → dengiz
+yangi → yangi
+
+# --- Кавычки, адреса и уже новый текст не трогаются ---
+Bu 'radio' edi → Bu 'radio' edi
+'salom' → 'salom'
+https://shop.uz/choy → https://shop.uz/choy
+www.shahar.uz → www.shahar.uz
+ashot@mail.uz → ashot@mail.uz
+Özbekiston şahar çoy ğişt maʼno → Özbekiston şahar çoy ğişt maʼno
+Toşkent va Ishoq → Toşkent va Ishoq
+Çiroyli Ishoq → Çiroyli Ishoq
+
+# --- Предложения ---
+Oʻzbekiston Respublikasi poytaxti — Toshkent shahri. → Özbekiston Respublikasi poytaxti — Toşkent şahri.
+Salom!\nChoy ichamizmi? → Salom!\nÇoy içamizmi?
+
+# --- Кириллица: буквы ---
+Ўзбекистон → Özbekiston
+ЎЗБЕКИСТОН → ÖZBEKISTON
+Тошкент шаҳри → Toşkent şahri
+чой → çoy
+Чойхона → Çoyxona
+ғишт → ğişt
+Ғалаба → Ğalaba
+қишлоқ → qişloq
+жуда → juda
+Ҳаёт → Hayot
+Хайр → Xayr
+Ш → Ş
+
+# --- Кириллица: ъ и ь ---
+маъно → maʼno
+санъат → sanʼat
+эълон → eʼlon
+ЭЪЛОН → EʼLON
+компьютер → kompyuter
+съезд → sʼyezd
+
+# --- Кириллица: е ---
+ер → yer
+Ер → Yer
+ЕР → YER
+поезд → poyezd
+кеча → keça
+
+# --- Кириллица: ё, ю, я ---
+ёз → yoz
+Ёз → Yoz
+актёр → aktyor
+юлдуз → yulduz
+Юлдуз → Yulduz
+ЮЛДУЗ → YULDUZ
+ялла → yalla
+
+# --- Кириллица: ц ---
+цирк → sirk
+Цирк → Sirk
+милиция → militsiya
+концерт → konsert
+
+# --- Кириллическое сҳ — это две буквы, а не Ş ---
+Исҳоқ → Ishoq
+асҳоб → ashob
+
+# --- Смешанный текст, цифры и знаки ---
+Ўзбекистон va Toshkent → Özbekiston va Toşkent
+2026-йил → 2026-yil
+Тошкент шаҳри, 21-октябр. → Toşkent şahri, 21-oktyabr.

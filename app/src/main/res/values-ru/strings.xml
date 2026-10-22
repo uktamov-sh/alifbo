@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Alifbo</string>
+    <string name="ime_name">Клавиатура Alifbo</string>
+    <string name="subtype_uz">Узбекский (новый алфавит)</string>
+    <string name="subtype_ru">Русский</string>
+
+    <string name="main_title">Клавиатура на новом узбекском алфавите</string>
+    <string name="main_intro">Буквы Ş, Ç, Ö и Ğ стоят на основных рядах. Клавиатура не подключается к интернету и не сохраняет то, что вы пишете.</string>
+    <string name="status_off">Клавиатура ещё не включена</string>
+    <string name="status_enabled">Клавиатура включена, теперь выберите её</string>
+    <string name="status_ready">Всё готово: выбрана клавиатура Alifbo</string>
+    <string name="step_enable">1. Включите «Клавиатура Alifbo» в настройках</string>
+    <string name="btn_enable">Открыть настройки</string>
+    <string name="step_choose">2. Сделайте её основной клавиатурой</string>
+    <string name="btn_choose">Выбрать клавиатуру</string>
+    <string name="try_title">3. Попробуйте здесь</string>
+    <string name="try_hint">Например: Özbekiston, şahar, çoy</string>
+    <string name="android_warning">При включении Android показывает для любой сторонней клавиатуры предупреждение, что она «может собирать вводимый текст». Это стандартное предупреждение. У клавиатуры Alifbo нет доступа в интернет, поэтому отправить что-либо она не может.</string>
+    <string name="privacy_title">Приватность</string>
+    <string name="privacy_body">• У приложения нет доступа в интернет: данные никуда не отправляются.\n• В полях паролей и PIN-кодов клавиатура не читает текст и ничего не подсказывает.\n• Набранный текст не сохраняется и не пишется в журнал.\n• Кнопка «eski→yangi» срабатывает только когда вы её нажимаете.</string>
+    <string name="footer">Алфавит: закон O‘RQ-1184 от 21.10.2026. Версия %1$s</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Основной язык интерфейса — узбекский на новом алфавите. Русский — в values-ru. -->
+<resources>
+    <string name="app_name">Alifbo</string>
+    <string name="ime_name">Alifbo klaviaturasi</string>
+    <string name="subtype_uz">Özbekça (yangi alifbo)</string>
+    <string name="subtype_ru">Rusça</string>
+
+    <string name="space_uz" translatable="false">Özbekça</string>
+    <string name="space_ru" translatable="false">Русский</string>
+    <string name="letters_uz" translatable="false">ABC</string>
+    <string name="letters_ru" translatable="false">АБВ</string>
+    <string name="convert" translatable="false">eski→yangi</string>
+
+    <string name="main_title">Yangi özbek alifbosi klaviaturasi</string>
+    <string name="main_intro">Ş, Ç, Ö va Ğ harflari asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni saqlamaydi.</string>
+    <string name="status_off">Klaviatura hali yoqilmagan</string>
+    <string name="status_enabled">Klaviatura yoqilgan, endi uni tanlang</string>
+    <string name="status_ready">Hammasi tayyor: Alifbo klaviaturasi tanlangan</string>
+    <string name="step_enable">1. Sozlamalarda «Alifbo klaviaturasi»ni yoqing</string>
+    <string name="btn_enable">Sozlamalarni oçiş</string>
+    <string name="step_choose">2. Uni asosiy klaviatura qilib tanlang</string>
+    <string name="btn_choose">Klaviaturani tanlaş</string>
+    <string name="try_title">3. Şu yerda sinab köring</string>
+    <string name="try_hint">Masalan: Özbekiston, şahar, çoy</string>
+    <string name="android_warning">Yoqişda Android barça begona klaviaturalar uçun «matnni yiğişi mumkin» degan ogohlantirişni körsatadi. Bu odatiy ogohlantiriş. Alifbo klaviaturasida internetga ruxsat yöq, şuning uçun heç narsa yuborilmaydi.</string>
+    <string name="privacy_title">Maxfiylik</string>
+    <string name="privacy_body">• Ilovada internetga ruxsat yöq: maʼlumot heç qayerga yuborilmaydi.\n• Parol va PIN-kod maydonlarida klaviatura matnni öqimaydi va tavsiya bermaydi.\n• Yozilgan matn saqlanmaydi va jurnalga yozilmaydi.\n• «eski→yangi» tugmasi faqat siz bosganingizda işlaydi.</string>
+    <string name="footer">Alifbo: 21.10.2026 dagi O‘RQ-1184-son Qonun. Versiya %1$s</string>
+</resources>
