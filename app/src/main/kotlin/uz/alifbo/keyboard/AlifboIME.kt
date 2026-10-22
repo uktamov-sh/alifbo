@@ -116,7 +116,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
             when {
                 key.action == Action.LANGUAGE -> getSystemService(InputMethodManager::class.java).showInputMethodPicker()
                 key.longPress != null -> {
-                    ic.commitText(key.longPress, 1)
+                    ic.commitText(Layouts.withCase(key.longPress, onLetters && shift.isUpper), 1)
                     shift.afterLetter()
                 }
             }

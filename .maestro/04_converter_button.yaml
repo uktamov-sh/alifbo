@@ -1,0 +1,11 @@
+appId: uz.alifbo.keyboard
+name: Кнопка eski→yangi переписывает старую латиницу
+---
+- runFlow: _open_field.yaml
+- tapOn: "C"
+- tapOn: "h"
+- tapOn: "o"
+- tapOn: "y"
+- assertVisible: "Choy"
+- tapOn: "eski→yangi"
+- assertVisible: "Çoy"

@@ -91,6 +91,9 @@ object Layouts {
         )
     )
 
+    /** Регистр вводимого символа: с Shift буквы заглавные (е→Е, ё→Ё), цифры и знаки не меняются. */
+    fun withCase(text: String, upper: Boolean): String = if (upper) text.uppercase() else text
+
     fun forPage(page: Page, emojiIndex: Int = 0): List<List<Key>> = when (page) {
         Page.UZ -> uz
         Page.RU -> ru

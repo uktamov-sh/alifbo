@@ -54,6 +54,16 @@ class LayoutsTest {
     }
 
     @Test
+    fun `долгое нажатие с Shift даёт заглавную букву`() {
+        val e = Layouts.forPage(Page.RU).flatten().single { it.text == "е" }
+        assertEquals("Ё", Layouts.withCase(e.longPress!!, upper = true))
+        assertEquals("ё", Layouts.withCase(e.longPress!!, upper = false))
+        assertEquals("Ъ", Layouts.withCase("ъ", upper = true))
+        assertEquals("1", Layouts.withCase("1", upper = true))
+        assertEquals("'", Layouts.withCase("'", upper = true))
+    }
+
+    @Test
     fun `на страницах букв есть кнопка эмодзи`() {
         listOf(Page.UZ, Page.RU).forEach { page ->
             assertTrue(Action.EMOJI in Layouts.forPage(page).flatten().mapNotNull { it.action }, "Нет эмодзи на $page")

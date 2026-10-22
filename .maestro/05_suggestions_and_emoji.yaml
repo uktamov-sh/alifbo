@@ -1,0 +1,12 @@
+appId: uz.alifbo.keyboard
+name: Подсказка из словаря и вставка эмодзи
+---
+- runFlow: _open_field.yaml
+- tapOn: "T"
+- tapOn: "o"
+- tapOn: "ş"
+- tapOn: "Toşkent"
+- tapOn: "Emoji"
+- tapOn: "😀"
+- tapOn: "Harflar"
+- assertVisible: "Toşkent 😀"

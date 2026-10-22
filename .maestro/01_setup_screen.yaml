@@ -1,0 +1,7 @@
+appId: uz.alifbo.keyboard
+name: Экран установки показывает, что клавиатура выбрана
+---
+- launchApp:
+    stopApp: false
+- assertVisible: "Yangi özbek alifbosi klaviaturasi"
+- assertVisible: "Hammasi tayyor: Alifbo klaviaturasi tanlangan"

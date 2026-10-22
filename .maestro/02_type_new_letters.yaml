@@ -1,0 +1,14 @@
+appId: uz.alifbo.keyboard
+name: Набор новых букв и автозаглавная в начале
+---
+- runFlow: _open_field.yaml
+- tapOn: "Ş"
+- tapOn: "a"
+- tapOn: "h"
+- tapOn: "a"
+- tapOn: "r"
+- tapOn: "Probel"
+- tapOn: "ç"
+- tapOn: "o"
+- tapOn: "y"
+- assertVisible: "Şahar çoy"

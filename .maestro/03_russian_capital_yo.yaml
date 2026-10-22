@@ -1,0 +1,10 @@
+appId: uz.alifbo.keyboard
+name: Русская раскладка, долгое нажатие на Е с Shift даёт Ё (баг 0.1.0)
+---
+- runFlow: _open_field.yaml
+- tapOn: "Tilni almaştiriş"
+- longPressOn: "Е"
+- tapOn: "ж"
+- longPressOn: "е"
+- assertVisible: "Ёжё"
+- tapOn: "Tilni almaştiriş"

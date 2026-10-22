@@ -1,0 +1,11 @@
+appId: uz.alifbo.keyboard
+---
+# Не перезапускаем приложение: клавиатура живёт в том же процессе, и Android переключился бы на Gboard.
+- launchApp:
+    stopApp: false
+- scrollUntilVisible:
+    element: "3. Şu yerda sinab köring"
+    direction: DOWN
+- tapOn:
+    below: "3. Şu yerda sinab köring"
+- eraseText: 60

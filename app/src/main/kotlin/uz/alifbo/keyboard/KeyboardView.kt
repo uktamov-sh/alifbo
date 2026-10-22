@@ -169,7 +169,7 @@ class KeyboardView(context: Context) : View(context) {
             drawCentered(canvas, labelOf(key), r.centerX(), r.centerY())
 
             if (key.text != null && key.longPress != null) {
-                canvas.drawText(key.longPress, r.right - 4 * dp, r.top + 12 * dp, hint)
+                canvas.drawText(Layouts.withCase(key.longPress, upper), r.right - 4 * dp, r.top + 12 * dp, hint)
             }
         }
         drawPreview(canvas)
