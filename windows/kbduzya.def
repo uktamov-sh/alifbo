@@ -1,0 +1,4 @@
+LIBRARY KBDUZYA
+
+EXPORTS
+    KbdLayerDescriptor @1
