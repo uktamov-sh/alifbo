@@ -59,7 +59,7 @@ $cases = @(
     @('OEM_6', 'altgr', 0x005D), @('OEM_6', 'altgr shift', 0x007D)
     @('OEM_5', 'altgr', 0x005C), @('OEM_5', 'altgr shift', 0x007C)
     @('OEM_1', 'altgr', 0x003B), @('OEM_1', 'altgr shift', 0x003A)
-    @('OEM_7', 'altgr', 0x0027)
+    , @('OEM_7', 'altgr', 0x0027)   # запятая: иначе PowerShell развернёт одиночный массив
     # Остальное как в английской раскладке
     @('Q', '', 0x0071), @('Q', 'shift', 0x0051), @('Q', 'caps', 0x0051), @('Q', 'caps shift', 0x0071)
     @('I', '', 0x0069), @('I', 'shift', 0x0049), @('I', 'caps', 0x0049)
