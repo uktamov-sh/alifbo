@@ -2,7 +2,11 @@
 # Запуск сквозных тестов на эмуляторе в CI: ставим приложение, включаем клавиатуру, гоняем Maestro.
 set -euo pipefail
 adb install -r app/build/outputs/apk/debug/app-debug.apk
-sleep 5
+# После установки Android регистрирует клавиатуру не сразу: ждём её в списке методов ввода.
+for i in $(seq 1 60); do
+  adb shell ime list -a -s | grep -q "uz.alifbo.keyboard/.AlifboIME" && break
+  sleep 2
+done
 adb shell ime enable uz.alifbo.keyboard/.AlifboIME
 adb shell ime set uz.alifbo.keyboard/.AlifboIME
 adb shell settings put secure show_ime_with_hard_keyboard 1
