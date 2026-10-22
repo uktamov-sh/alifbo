@@ -1,0 +1,610 @@
+<meta charset="utf-8">
+<title>Alifbo — loyiha pasporti</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: одна колонка-лист; каждая секция — живой макет (телефон, клавиатура ПК, конвертер), рядом короткие пояснения */
+:root {
+  --bg: #f2f4f8;
+  --surface: #ffffff;
+  --ink: #131a2c;
+  --muted: #5a637c;
+  --line: #d8dde9;
+  --lapis: #1e3c9e;
+  --turq: #0e8f87;
+  --turq-soft: #dff3f1;
+  --kbd: #dfe3ec;
+  --key: #ffffff;
+  --key2: #c4cbdb;
+  --key-shadow: #9aa3b8;
+  --display: "Unbounded", "Segoe UI", system-ui, sans-serif;
+  --body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1020; --surface: #151a2c; --ink: #e7eaf4; --muted: #9aa2bc; --line: #283050;
+    --lapis: #8aa2ff; --turq: #45d1c5; --turq-soft: #12302e;
+    --kbd: #1b2136; --key: #2b3250; --key2: #222840; --key-shadow: #0a0d18;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1020; --surface: #151a2c; --ink: #e7eaf4; --muted: #9aa2bc; --line: #283050;
+  --lapis: #8aa2ff; --turq: #45d1c5; --turq-soft: #12302e;
+  --kbd: #1b2136; --key: #2b3250; --key2: #222840; --key-shadow: #0a0d18;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 56px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.05; }
+h2 { font-size: clamp(1.25rem, 2.6vw, 1.6rem); font-weight: 500; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--muted); font-size: 1.05rem; }
+section { display: grid; gap: 20px; min-width: 0; }
+.sec-head { display: grid; gap: 8px; }
+.hero { display: grid; gap: 16px; }
+.hero h1 .acc { color: var(--turq); }
+.status { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+.chip.ok { border-color: var(--turq); color: var(--turq); }
+
+/* Алфавит */
+.alphabet { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
+.letter { display: grid; place-items: center; gap: 0; padding: 10px 0 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.letter b { font-family: var(--display); font-weight: 500; font-size: 1.3rem; line-height: 1.1; }
+.letter small { font-family: var(--mono); font-size: 11px; color: var(--muted); min-height: 1.3em; }
+.letter.new { border-color: var(--turq); background: var(--turq-soft); }
+.letter.new b, .letter.new small { color: var(--turq); }
+
+/* Android */
+.android { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 32px; align-items: start; }
+.phone { width: 100%; max-width: 380px; border-radius: 34px; border: 1px solid var(--line); background: var(--surface); padding: 14px 10px 10px; display: grid; gap: 10px; box-shadow: 0 18px 40px -24px rgba(19, 26, 44, 0.45); }
+.field { min-height: 120px; max-height: 160px; overflow-y: auto; margin: 4px 6px 0; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); font-size: 17px; white-space: pre-wrap; word-break: break-word; }
+.field .ph { color: var(--muted); }
+.caret { display: inline-block; width: 2px; height: 1.15em; vertical-align: text-bottom; background: var(--lapis); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.kbd { background: var(--kbd); border-radius: 0 0 24px 24px; padding: 6px 4px 10px; display: grid; gap: 8px; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.sugg { display: flex; align-items: stretch; height: 38px; border-bottom: 1px solid var(--line); }
+.sugg button { flex: 1; min-width: 0; border: 0; background: none; color: var(--ink); font: 500 15px var(--body); cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sugg button + button { border-left: 1px solid var(--line); }
+.sugg .conv { flex: 0 0 auto; padding: 0 12px; color: var(--turq); font-family: var(--mono); font-size: 13px; }
+.row { display: flex; gap: 5px; padding: 0 2px; }
+.k { flex: 1 1 0; min-width: 0; height: 46px; border: 0; border-radius: 7px; background: var(--key); color: var(--ink); font: 400 20px var(--body); box-shadow: 0 1px 0 var(--key-shadow); cursor: pointer; position: relative; padding: 0; display: grid; place-items: center; }
+.k.sp { background: var(--key2); font-size: 14px; font-weight: 500; flex-grow: 1.5; }
+.k.space { flex-grow: 5; font-size: 13px; color: var(--muted); }
+.k.enter { background: var(--lapis); color: var(--surface); flex-grow: 1.5; }
+.k.new { color: var(--turq); font-weight: 600; }
+.k.on { background: var(--lapis); color: var(--surface); }
+.k:active, .k.down { filter: brightness(0.88); }
+.k sup { position: absolute; top: 2px; right: 4px; font: 10px var(--mono); color: var(--muted); }
+.notes { display: grid; gap: 14px; }
+.notes ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 60ch; }
+.notes li::marker { color: var(--turq); }
+code, kbd { font-family: var(--mono); font-size: 0.9em; }
+
+/* Windows */
+.pc-scroll { overflow-x: auto; padding-bottom: 6px; }
+.pc { min-width: 760px; background: var(--kbd); border-radius: 14px; padding: 12px; display: grid; gap: 6px; user-select: none; -webkit-user-select: none; }
+.pc .r { display: flex; gap: 6px; }
+.pk { flex: 1 1 0; min-width: 0; height: 52px; border-radius: 6px; background: var(--key); box-shadow: 0 2px 0 var(--key-shadow); border: 0; color: var(--ink); cursor: pointer; position: relative; font: 500 15px var(--body); padding: 0; }
+.pk .main { position: absolute; left: 8px; bottom: 6px; }
+.pk .shift { position: absolute; left: 8px; top: 5px; font-size: 12px; color: var(--muted); }
+.pk .alt { position: absolute; right: 7px; bottom: 6px; font: 11px var(--mono); color: var(--lapis); }
+.pk.fn { background: var(--key2); font-size: 12px; color: var(--muted); }
+.pk.new { background: var(--turq-soft); outline: 1.5px solid var(--turq); outline-offset: -1.5px; }
+.pk.new .main { color: var(--turq); font-family: var(--display); font-size: 17px; bottom: 5px; }
+.pk.on { background: var(--lapis); color: var(--surface); }
+.pk.down { transform: translateY(2px); box-shadow: none; }
+textarea { width: 100%; min-height: 90px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: 17px/1.5 var(--body); padding: 12px 14px; }
+textarea:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+
+/* Конвертер */
+.conv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.conv-grid label { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.out { min-height: 150px; border: 1px solid var(--turq); border-radius: 10px; background: var(--turq-soft); padding: 12px 14px; font-size: 17px; white-space: pre-wrap; word-break: break-word; color: var(--ink); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 8px 14px; font: 500 14px var(--body); cursor: pointer; }
+.btn.primary { background: var(--lapis); border-color: var(--lapis); color: var(--surface); }
+.small { font-size: 14px; color: var(--muted); }
+
+/* Безопасность */
+.sec-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 640px) { .sec-grid { grid-template-columns: minmax(0, 1fr); } }
+.card { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px 20px; display: grid; gap: 10px; align-content: start; }
+.card h3 { margin: 0; font: 600 16px var(--body); }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 15px; }
+.card li::marker { color: var(--turq); }
+
+footer { color: var(--muted); font-size: 14px; display: grid; gap: 4px; }
+footer a { color: var(--lapis); }
+
+@media (max-width: 760px) {
+  .android, .conv-grid { grid-template-columns: minmax(0, 1fr); }
+  .phone { margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+
+/* Паспорт: переключатель языка и таблицы фактов */
+html[lang="uz"] [lang="ru"], html[lang="ru"] [lang="uz"] { display: none !important; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.langs { display: flex; gap: 6px; }
+.langs button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px; font: 500 14px var(--body); cursor: pointer; }
+.langs button[aria-pressed="true"] { background: var(--lapis); border-color: var(--lapis); color: var(--surface); }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.facts > div { display: grid; gap: 2px; padding: 12px 16px; border-bottom: 1px solid var(--line); min-width: 0; }
+.facts dt { font: 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+.facts a { color: var(--lapis); }
+.muted { color: var(--muted); font-weight: 400; }
+ul.plain { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+@media (max-width: 640px) { .facts { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="eyebrow"><span lang="uz">Loyiha pasporti</span><span lang="ru">Паспорт проекта</span> · v0.1.1</span>
+    <div class="langs"><button type="button" data-lang="uz">Özbekça</button><button type="button" data-lang="ru">Русский</button></div>
+  </div>
+
+  <header class="hero">
+    <h1>Alifbo — klaviatura<br>yangi <span class="acc">özbek</span> alifbosi uçun</h1>
+    <p class="lead" lang="uz">Yangi özbek lotin alifbosi uçun klaviatura: Android va Windows. Ş, Ç, Ö va Ğ harflari uzoq bosişsiz, asosiy qatorlarda turadi. Bu sahifada tartiblar va konvertorni sinab köriş mumkin.</p>
+    <p class="lead" lang="ru">Клавиатура для нового узбекского латинского алфавита: Android и Windows. Ş, Ç, Ö и Ğ стоят на основных рядах, без долгих нажатий. На этой странице можно попробовать раскладки и конвертер.</p>
+    <div class="status">
+      <span class="chip ok"><span lang="uz">21.10.2026 dagi O‘RQ-1184-son Qonun</span><span lang="ru">Закон O‘RQ-1184 от 21.10.2026</span></span>
+      <span class="chip"><span lang="uz">Kuçga kiradi: 22.04.2027</span><span lang="ru">Вступает в силу 22.04.2027</span></span>
+      <span class="chip"><span lang="uz">28 harf + tutuq belgisi</span><span lang="ru">28 букв + тутук белгиси</span></span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow"><span lang="uz">Asosiy maʼlumotlar</span><span lang="ru">Основные сведения</span></span>
+      <h2><span lang="uz">Loyiha haqida qisqaça</span><span lang="ru">Коротко о проекте</span></h2>
+    </div>
+    <div class="facts">
+      <div><dt lang="uz">Nomi</dt><dt lang="ru">Название</dt><dd>Alifbo</dd></div>
+      <div><dt lang="uz">Versiya</dt><dt lang="ru">Версия</dt><dd>0.1.1 <span class="muted"><span lang="uz">(dastlabki)</span><span lang="ru">(предварительная)</span></span></dd></div>
+      <div><dt lang="uz">Platformalar</dt><dt lang="ru">Платформы</dt><dd>Android 8.0+ · Windows 10/11 (x64, ARM64)</dd></div>
+      <div><dt lang="uz">Asos</dt><dt lang="ru">Основание</dt><dd><a href="https://lex.uz/docs/-8548754" target="_blank" rel="noopener">O‘RQ-1184, 21.10.2026</a></dd></div>
+      <div><dt lang="uz">Litsenziya</dt><dt lang="ru">Лицензия</dt><dd><span lang="uz">GPL-3.0, oçiq kod</span><span lang="ru">GPL-3.0, открытый код</span></dd></div>
+      <div><dt lang="uz">Narxi</dt><dt lang="ru">Цена</dt><dd><span lang="uz">Bepul, reklamasiz</span><span lang="ru">Бесплатно, без рекламы</span></dd></div>
+      <div><dt lang="uz">Kod</dt><dt lang="ru">Код</dt><dd><a href="https://github.com/uktamov-sh/alifbo" target="_blank" rel="noopener">github.com/uktamov-sh/alifbo</a></dd></div>
+      <div><dt lang="uz">Sayt</dt><dt lang="ru">Сайт</dt><dd><a href="https://uktamov-sh.github.io/alifbo/" target="_blank" rel="noopener">uktamov-sh.github.io/alifbo</a></dd></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow"><span lang="uz">Qonun matni böyiça alifbo</span><span lang="ru">Алфавит по тексту закона</span></span>
+      <h2><span lang="uz">28 harf va ʼ belgisi</span><span lang="ru">28 букв и знак ʼ</span></h2>
+      <p class="lead" lang="uz">Yangi harflar firuza rangda, ostida eski yozilişi. Alifboda C harfi yöq, ng esa alohida harf hisoblanmaydi. Tutuq belgisi — ʼ (U+02BC), lex.uz dagi rasmiy matn bilan tekşirilgan.</p>
+      <p class="lead" lang="ru">Новые буквы выделены бирюзовым, под ними старое написание. Буквы C в алфавите нет, а ng больше не считается отдельной буквой. Тутук белгиси — ʼ (U+02BC), сверено с официальным текстом на lex.uz.</p>
+    </div>
+    <div class="alphabet" id="alphabet"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Android</span>
+      <h2><span lang="uz">Ekran klaviaturasi</span><span lang="ru">Экранная клавиатура</span></h2>
+    </div>
+    <div class="android">
+      <div class="phone">
+        <div class="field" id="phoneField" aria-live="polite"></div>
+        <div class="kbd" id="phoneKbd">
+          <div class="sugg" id="sugg"></div>
+          <div id="phoneRows"></div>
+        </div>
+      </div>
+      <div class="notes">
+        <p lang="uz">Tugmalarni siçqonça yoki barmoq bilan bosing — xuddi telefondagidek işlaydi.</p>
+        <p lang="ru">Нажимайте клавиши мышью или пальцем — всё работает как на телефоне.</p>
+        <ul lang="uz">
+          <li>Qatorda 11 tadan tugma. Ğ yuqori qatorda, Ş va ʼ örtada, Ö va Ç pastda.</li>
+          <li>W va C qoldirilgan: ismlar, sayt va poçta manzillari uçun kerak.</li>
+          <li>Yuqori qatorni uzoq bosiş — raqam. Rusça tartibda uzoq <kbd>е</kbd> — <kbd>ё</kbd>, uzoq <kbd>ь</kbd> — <kbd>ъ</kbd> (Shift bilan — katta harf).</li>
+          <li><kbd>⇧</kbd> ikki marta — doimiy katta harflar. Nuqtadan keyin harf özi katta böladi.</li>
+          <li><kbd>🌐</kbd> — özbekça ↔ rusça.</li>
+          <li><kbd>eski→yangi</kbd> — maydondagi eski lotin yoki kirill matnni yangi alifboga öğiradi.</li>
+          <li>Ilovada: 60 000 özbekça va 48 000 rusça söz luğati, emoji, sozlamalar, TalkBack.</li>
+        </ul>
+        <ul lang="ru">
+          <li>По 11 клавиш в ряду. Ğ в верхнем ряду, Ş и ʼ в среднем, Ö и Ç в нижнем.</li>
+          <li>W и C оставлены: они нужны для имён, адресов сайтов и почты.</li>
+          <li>Долгое нажатие на верхний ряд — цифра. На русской раскладке долгое <kbd>е</kbd> — <kbd>ё</kbd>, долгое <kbd>ь</kbd> — <kbd>ъ</kbd> (с Shift — заглавные).</li>
+          <li><kbd>⇧</kbd> дважды — Caps Lock. После точки буква сама становится заглавной.</li>
+          <li><kbd>🌐</kbd> — узбекский ↔ русский.</li>
+          <li><kbd>eski→yangi</kbd> — переписывает текст поля со старой латиницы или кириллицы на новый алфавит.</li>
+          <li>В приложении: словари на 60 000 узбекских и 48 000 русских слов, эмодзи, настройки, TalkBack.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Windows</span>
+      <h2><span lang="uz">Oddiy klaviatura uçun tartib</span><span lang="ru">Раскладка для обычной клавиатуры</span></h2>
+      <p class="lead" lang="uz">Asosi — inglizça (AQŞ) tartib. Öngdagi beşta tugma yangi harflarni beradi, eski belgilar AltGr (öng Alt) orqali.</p>
+      <p class="lead" lang="ru">Основа — американская раскладка. Пять клавиш справа дают новые буквы, прежние символы — через AltGr (правый Alt).</p>
+    </div>
+    <div class="pc-scroll"><div class="pc" id="pc"></div></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--turq-soft);outline:1.5px solid var(--turq)"></i><span lang="uz">Yangi harf</span><span lang="ru">Новая буква</span></span>
+      <span><i class="sw" style="background:var(--key);box-shadow:inset 0 0 0 1px var(--line)"></i><span lang="uz">Inglizça tartibdagidek</span><span lang="ru">Как в английской раскладке</span></span>
+      <span><b style="color:var(--lapis);font:12px var(--mono)">[</b> <span lang="uz">AltGr bilan belgi</span><span lang="ru">символ через AltGr</span></span>
+    </div>
+    <label class="small" for="winInput"><span lang="uz">Maydonni bosing va öz klaviaturangizda yozing — sahifa tugmalarni özi ilib oladi.</span><span lang="ru">Кликните в поле и печатайте на своей клавиатуре — страница сама перехватывает нажатия.</span></label>
+    <textarea id="winInput" placeholder="Masalan: Özbekiston, şahar, çoy, ğişt, maʼno"></textarea>
+    <p class="small" lang="uz">Windowsʼda yana: Ctrl+Shift+Y — belgilangan matnni yangi alifboga öğiradigan konvertor. Örnatuvçi «Ilovalar» orqali öçiriladi.</p>
+    <p class="small" lang="ru">Ещё в Windows: конвертер Ctrl+Shift+Y переписывает выделенный текст на новый алфавит. Установщик удаляется через «Приложения».</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow"><span lang="uz">Konvertor</span><span lang="ru">Конвертер</span></span>
+      <h2><span lang="uz">Eski matn → yangi alifbo</span><span lang="ru">Старый текст → новый алфавит</span></h2>
+      <p class="lead" lang="uz">Eski lotin yoki kirill yozuvidagi matnni joylang. Yozuv avtomatik aniqlanadi.</p>
+      <p class="lead" lang="ru">Вставьте текст старой латиницей или кириллицей. Алфавит определяется автоматически.</p>
+    </div>
+    <div class="conv-grid">
+      <label for="convIn"><span lang="uz">Asl matn</span><span lang="ru">Исходный текст</span>
+        <textarea id="convIn" rows="6"></textarea>
+      </label>
+      <div style="display:grid;gap:6px;min-width:0">
+        <span class="small" id="convDetected"></span>
+        <div class="out" id="convOut"></div>
+      </div>
+    </div>
+    <div class="btns">
+      <button class="btn" id="exLatin" type="button"><span lang="uz">Misol: eski lotin</span><span lang="ru">Пример: старая латиница</span></button>
+      <button class="btn" id="exCyr" type="button"><span lang="uz">Misol: kirill</span><span lang="ru">Пример: кириллица</span></button>
+      <button class="btn primary" id="copyOut" type="button"><span lang="uz">Natijani nusxalaş</span><span lang="ru">Скопировать результат</span></button>
+      <span class="small" id="copyMsg" role="status"></span>
+    </div>
+    <p class="small" lang="uz">Qoidalar Android, Windows va şu sahifada bir xil va 84 ta namunaviy misolda tekşirilgan. Sayt va poçta manzillari özgarmaydi.</p>
+    <p class="small" lang="ru">Правила одинаковы для Android, Windows и этой страницы и проверены на 84 эталонных примерах. Адреса сайтов и почты не меняются.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow"><span lang="uz">Xavfsizlik</span><span lang="ru">Безопасность</span></span>
+      <h2><span lang="uz">Klaviatura hammasini köradi, şuning uçun heç narsani saqlamaydi va yubormaydi</span><span lang="ru">Клавиатура видит всё, поэтому ничего не хранит и никуда не отправляет</span></h2>
+    </div>
+    <div class="sec-grid">
+      <div class="card">
+        <h3><span lang="uz">Internetsiz</span><span lang="ru">Без интернета</span></h3>
+        <ul lang="uz">
+          <li>Android ilovasida birorta ham ruxsat yöq, internet ham. Buni telefon sozlamalarida tekşiriş mumkin; ruxsat paydo bölsa, dastur yiğilmaydi.</li>
+          <li>Reklama, statistika va begona kutubxonalar yöq.</li>
+          <li>Luğat va tavsiyalar faqat qurilmada.</li>
+        </ul>
+        <ul lang="ru">
+          <li>У Android-приложения нет ни одного разрешения, в том числе интернета. Это видно в настройках телефона; если разрешение появится, сборка упадёт.</li>
+          <li>Нет рекламы, аналитики и сторонних библиотек.</li>
+          <li>Словарь и подсказки работают только на устройстве.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span lang="uz">Parollar</span><span lang="ru">Пароли</span></h3>
+        <ul lang="uz">
+          <li>Parol va PIN-kod maydonlarida matn öqilmaydi, tavsiya va kattalaştirilgan harf körsatilmaydi.</li>
+          <li>TalkBack u yerda harflarni aytmaydi (faqat quloqçinda).</li>
+          <li>Yozilgan matn saqlanmaydi, jurnalga va zaxira nusxaga tuşmaydi.</li>
+        </ul>
+        <ul lang="ru">
+          <li>В полях паролей и PIN-кодов текст не читается, подсказки и крупная буква не показываются.</li>
+          <li>TalkBack там не называет буквы (только в наушниках).</li>
+          <li>Набранный текст не сохраняется, не пишется в журнал и резервные копии.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Windows</h3>
+        <ul lang="uz">
+          <li>Tartib — kodsiz tugmalar jadvali, u matnni köra olmaydi.</li>
+          <li>Konvertor tarmoqsiz, buferni faqat Ctrl+Shift+Y da öqiydi va bir soniyada qaytaradi.</li>
+          <li>Örnatuvçi fayllarni SHA-256 bilan tekşiradi.</li>
+        </ul>
+        <ul lang="ru">
+          <li>Раскладка — таблица клавиш без программного кода, она не может видеть текст.</li>
+          <li>Конвертер без сети, читает буфер только по Ctrl+Shift+Y и через секунду возвращает прежний.</li>
+          <li>Установщик сверяет файлы по SHA-256.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span lang="uz">Tekşiriş</span><span lang="ru">Проверяемость</span></h3>
+        <ul lang="uz">
+          <li>Oçiq kod: hamma klaviatura heç narsa yiğmasligini tekşira oladi.</li>
+          <li>APK raqamli imzo bilan imzolangan; GitHub Actions qadamlari xeş bilan mahkamlangan.</li>
+        </ul>
+        <ul lang="ru">
+          <li>Открытый код: любой может проверить, что клавиатура ничего не собирает.</li>
+          <li>APK подписана; шаги GitHub Actions закреплены по хешу коммита.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow"><span lang="uz">Sifat</span><span lang="ru">Качество</span></span>
+      <h2><span lang="uz">Har bir özgarişda avtomatik tekşiruvlar</span><span lang="ru">Автоматические проверки на каждое изменение</span></h2>
+    </div>
+    <div class="facts">
+      <div><dt lang="uz">Konvertor (Kotlin, C#, JS)</dt><dt lang="ru">Конвертер (Kotlin, C#, JS)</dt><dd><span lang="uz">84 ta umumiy misol, har bir tilda</span><span lang="ru">84 общих эталона в каждой версии</span></dd></div>
+      <div><dt lang="uz">Android klaviaturasi</dt><dt lang="ru">Android-клавиатура</dt><dd><span lang="uz">29 unit-test + 5 ta Maestro e2e ssenariy emulyatorda</span><span lang="ru">29 юнит-тестов + 5 сценариев Maestro на эмуляторе</span></dd></div>
+      <div><dt lang="uz">Windows tartibi</dt><dt lang="ru">Раскладка Windows</dt><dd><span lang="uz">57 tekşiruv × x64, 32-bit, ARM64; Notepadʼda Ctrl+Shift+Y</span><span lang="ru">57 проверок × x64, 32-бит, ARM64; Ctrl+Shift+Y в Блокноте</span></dd></div>
+      <div><dt lang="uz">Ruxsatlar</dt><dt lang="ru">Разрешения</dt><dd><span lang="uz">0 — yiğilganda tekşiriladi</span><span lang="ru">0 — проверяется при каждой сборке</span></dd></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow"><span lang="uz">Holat</span><span lang="ru">Статус</span></span>
+      <h2><span lang="uz">Tayyor va keyingi qadamlar</span><span lang="ru">Готово и следующие шаги</span></h2>
+    </div>
+    <ul class="plain" lang="uz">
+      <li>✅ Android ilovasi, Windows tartibi va konvertori, örnatuvçi, sayt, maxfiylik siyosati</li>
+      <li>⏳ Haqiqiy telefon va kompyuterda tekşiriş</li>
+      <li>⏳ Google Play va F-Droidʼda çiqariş</li>
+      <li>⏳ Windows örnatuvçisi uçun raqamli imzo</li>
+    </ul>
+    <ul class="plain" lang="ru">
+      <li>✅ Android-приложение, раскладка и конвертер для Windows, установщик, сайт, политика конфиденциальности</li>
+      <li>⏳ Проверка на реальных телефонах и компьютерах</li>
+      <li>⏳ Публикация в Google Play и F-Droid</li>
+      <li>⏳ Цифровая подпись установщика Windows</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span><span lang="uz">Alifbo manbasi:</span><span lang="ru">Источник алфавита:</span> <a href="https://lex.uz/docs/-8548754" target="_blank" rel="noopener">lex.uz, O‘RQ-1184, 21.10.2026</a>.</span>
+    <span><span lang="uz">Söz tavsiyalari: Özbek Vikipediyasi va OpenSubtitles (FrequencyWords), CC BY-SA 4.0.</span><span lang="ru">Подсказки слов: узбекская Википедия и OpenSubtitles (FrequencyWords), CC BY-SA 4.0.</span></span>
+  </footer>
+</div>
+
+<script src="converter.js"></script>
+<script>
+(() => {
+  const T = (uz, ru) => document.documentElement.lang === "ru" ? ru : uz;
+  const TUTUQ = AlifboConverter.TUTUQ;
+
+  // ---------- Алфавит ----------
+  const ALPHABET = ["A","B","D","E","F","G",["Ğ","Gʻ"],"H","I","J","K","L","M","N","O",["Ö","Oʻ"],"P","Q","R","S",["Ş","Sh"],["Ç","Ch"],"T","U","V","X","Y","Z",[TUTUQ,"tutuq"]];
+  document.getElementById("alphabet").innerHTML = ALPHABET.map(l => {
+    if (Array.isArray(l)) {
+      const isNew = l[1] !== "tutuq";
+      return `<div class="letter${isNew ? " new" : ""}"><b>${l[0]}${isNew ? " " + l[0].toLowerCase() : ""}</b><small>${l[1]}</small></div>`;
+    }
+    return `<div class="letter"><b>${l} ${l.toLowerCase()}</b><small></small></div>`;
+  }).join("");
+
+  // ---------- Конвертер ----------
+  const hasCyr = s => /[а-яёўқғҳ]/i.test(s);
+  const convert = AlifboConverter.toNewLatin;
+
+  const convIn = document.getElementById("convIn");
+  const convOut = document.getElementById("convOut");
+  const convDetected = document.getElementById("convDetected");
+  const EX_LAT = "Oʻzbekiston Respublikasi poytaxti — Toshkent shahri.\nChoyxonada choy ichdik, g‘isht uyda yashaymiz.\nIs'hoq ma'no va san'at haqida so'zladi.";
+  const EX_CYR = "Ўзбекистон Республикаси пойтахти — Тошкент шаҳри.\nЧойхонада чой ичдик, ғишт уйда яшаймиз.\nИсҳоқ цирк ва маъно ҳақида сўзлади. ЎЗБЕКИСТОН";
+  function runConv() {
+    convOut.textContent = convert(convIn.value);
+    convDetected.textContent = convIn.value.trim() === "" ? T("Yangi alifbo", "Новый алфавит") : hasCyr(convIn.value) ? T("Yangi alifbo · asl matn: kirill", "Новый алфавит · исходник: кириллица") : T("Yangi alifbo · asl matn: lotin", "Новый алфавит · исходник: латиница");
+  }
+  convIn.value = EX_LAT; runConv();
+  convIn.addEventListener("input", runConv);
+  document.getElementById("exLatin").onclick = () => { convIn.value = EX_LAT; runConv(); };
+  document.getElementById("exCyr").onclick = () => { convIn.value = EX_CYR; runConv(); };
+  const copyMsg = document.getElementById("copyMsg");
+  document.getElementById("copyOut").onclick = () => {
+    const text = convOut.textContent;
+    navigator.clipboard.writeText(text).then(() => { copyMsg.textContent = T("Nusxalandi", "Скопировано"); }).catch(() => {
+      const r = document.createRange(); r.selectNodeContents(convOut);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      copyMsg.textContent = T("Matn belgilandi, Ctrl+C ni bosing", "Текст выделен, нажмите Ctrl+C");
+    });
+  };
+
+  // ---------- Android ----------
+  const DIGITS = ["1","2","3","4","5","6","7","8","9","0"];
+  const LAYOUTS = {
+    uz: [["q","w","e","r","t","y","u","i","o","p","ğ"],["a","s","d","f","g","h","j","k","l","ş",TUTUQ],["SHIFT","z","x","c","v","b","n","m","ö","ç","BKSP"],["SYM","LANG",",","SPACE",".","ENTER"]],
+    ru: [["й","ц","у","к","е","н","г","ш","щ","з","х"],["ф","ы","в","а","п","р","о","л","д","ж","э"],["SHIFT","я","ч","с","м","и","т","ь","б","ю","BKSP"],["SYM","LANG",",","SPACE",".","ENTER"]],
+    sym: [DIGITS,["@","#","$","%","&","-","+","(",")","/"],["SYM2","*","\"","'",":",";","!","?","BKSP"],["ABC","LANG",",","SPACE",".","ENTER"]],
+  };
+  const NEW_KEYS = new Set(["ğ","ş","ö","ç",TUTUQ]);
+  const LONG = { "е":"ё","ь":"ъ", [TUTUQ]:"'" };
+  LAYOUTS.uz[0].slice(0, 10).forEach((k, i) => LONG[k] ??= DIGITS[i]);
+  LAYOUTS.ru[0].slice(0, 10).forEach((k, i) => LONG[k] ??= DIGITS[i]);
+  const WORDS = ["salom","rahmat","yaxşi","kitob","maktab","Özbekiston","özbek","til","alifbo","şahar","Toşkent","Samarqand","çoy","çoyxona","çiroyli","çunki","ğalaba","ğişt","ğoya","öqituvçi","öquvçi","örgan","kun","yangi","ming","rang","keng","iş","işla","kişi","bola","bolalar","ota","ona","oila","uy","suv","non","maʼno","sanʼat","taʼlim","telefon","klaviatura","harf","söz","sözlar","qişloq","dunyo","hayot","vaqt","bugun","ertaga","kecha","xayr","iltimos","yöq","bor","kerak","mumkin","juda","katta","kiçik","öyin","göşt",
+    "привет","спасибо","хорошо","сегодня","завтра","работа","клавиатура","алфавит","пожалуйста","здравствуйте"];
+
+  let lang = "uz", page = "abc", shift = 1, lastShiftTap = 0, text = "";
+  const field = document.getElementById("phoneField");
+  const rowsEl = document.getElementById("phoneRows");
+  const suggEl = document.getElementById("sugg");
+
+  const keyLabel = k => ({ SHIFT: "⇧", BKSP: "⌫", SYM: "?123", SYM2: "=\\<", ABC: "ABC", LANG: "🌐", SPACE: lang === "uz" ? "Özbekça" : "Русский", ENTER: "↵" }[k] ?? (shift && page === "abc" ? k.toUpperCase() : k));
+  function renderKeys() {
+    const layout = page === "sym" ? LAYOUTS.sym : LAYOUTS[lang];
+    rowsEl.innerHTML = layout.map(row => `<div class="row">${row.map(k => {
+      const cls = ["k"];
+      if (["SHIFT","BKSP","SYM","SYM2","ABC","LANG"].includes(k)) cls.push("sp");
+      if (k === "SPACE") cls.push("space");
+      if (k === "ENTER") cls.push("enter");
+      if (k === "SHIFT" && shift) cls.push("on");
+      if (NEW_KEYS.has(k) && page === "abc") cls.push("new");
+      const hint = page === "abc" && LONG[k] ? `<sup>${LONG[k]}</sup>` : "";
+      return `<button type="button" class="${cls.join(" ")}" data-k="${k.replace(/"/g, "&quot;")}" aria-label="${keyLabel(k)}">${keyLabel(k)}${hint}</button>`;
+    }).join("")}</div>`).join("");
+    const lock = shift === 2;
+    const sh = rowsEl.querySelector('[data-k="SHIFT"]');
+    if (sh && lock) sh.textContent = "⇪";
+  }
+  function currentWord() { const m = text.match(/[\p{L}ʼ]+$/u); return m ? m[0] : ""; }
+  function renderField() {
+    field.innerHTML = text ? escapeHtml(text) + '<span class="caret"></span>' : '<span class="caret"></span><span class="ph"> Yozing…</span>';
+    field.scrollTop = field.scrollHeight;
+    const w = currentWord().toLowerCase();
+    const list = w ? WORDS.filter(x => x.toLowerCase().startsWith(w) && x.toLowerCase() !== w).slice(0, 3) : [];
+    suggEl.innerHTML = `<button type="button" class="conv" data-s="__conv">eski→yangi</button>` +
+      (list.length ? list.map(x => `<button type="button" data-s="${x}">${x}</button>`).join("") : `<button type="button" disabled style="color:var(--muted);font-weight:400">${T("tavsiyalar", "подсказки")}</button>`);
+  }
+  const escapeHtml = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  function autoShift() {
+    if (shift === 2) return;
+    shift = (text === "" || /[.!?]\s$/.test(text) || /\n$/.test(text)) ? 1 : 0;
+  }
+  function type(ch) {
+    if (shift && page === "abc") ch = ch.toUpperCase();
+    text += ch;
+    if (shift === 1) shift = 0;
+    autoShift();
+  }
+  function press(k, long) {
+    if (long && LONG[k]) { text += LONG[k]; if (shift === 1) shift = 0; autoShift(); }
+    else if (k === "SHIFT") {
+      const now = Date.now();
+      if (now - lastShiftTap < 320) shift = 2; else shift = shift ? 0 : 1;
+      lastShiftTap = now;
+    }
+    else if (k === "BKSP") { text = Array.from(text).slice(0, -1).join(""); autoShift(); }
+    else if (k === "SPACE") { text += " "; autoShift(); }
+    else if (k === "ENTER") { text += "\n"; autoShift(); }
+    else if (k === "SYM") page = "sym";
+    else if (k === "ABC") { page = "abc"; autoShift(); }
+    else if (k === "SYM2") return;
+    else if (k === "LANG") { lang = lang === "uz" ? "ru" : "uz"; page = "abc"; }
+    else type(k);
+    renderKeys(); renderField();
+  }
+  let timer = null, longFired = false, downKey = null;
+  rowsEl.addEventListener("pointerdown", e => {
+    const b = e.target.closest(".k"); if (!b) return;
+    e.preventDefault();
+    downKey = b.dataset.k; longFired = false; b.classList.add("down");
+    if (LONG[downKey] && page === "abc") timer = setTimeout(() => { longFired = true; press(downKey, true); }, 420);
+  });
+  const release = e => {
+    clearTimeout(timer);
+    if (downKey === null) return;
+    const k = downKey; downKey = null;
+    rowsEl.querySelectorAll(".down").forEach(x => x.classList.remove("down"));
+    if (!longFired && e.type === "pointerup") press(k, false);
+  };
+  rowsEl.addEventListener("pointerup", release);
+  rowsEl.addEventListener("pointerleave", release);
+  rowsEl.addEventListener("pointercancel", release);
+  suggEl.addEventListener("click", e => {
+    const b = e.target.closest("button[data-s]"); if (!b) return;
+    if (b.dataset.s === "__conv") text = AlifboConverter.toNewLatin(text, { assumeOldLatin: true });
+    else text = text.slice(0, text.length - currentWord().length) + b.dataset.s + " ";
+    autoShift(); renderKeys(); renderField();
+  });
+  renderKeys(); renderField();
+
+  // ---------- Windows ----------
+  // [code, обычный, с Shift, AltGr, AltGr+Shift, новая буква?]
+  const L = c => [c, c.toLowerCase(), c];
+  const PC = [
+    [["Backquote","`","~"],["Digit1","1","!"],["Digit2","2","@"],["Digit3","3","#"],["Digit4","4","$"],["Digit5","5","%"],["Digit6","6","^"],["Digit7","7","&"],["Digit8","8","*"],["Digit9","9","("],["Digit0","0",")"],["Minus","-","_"],["Equal","=","+"],["Backspace","⌫",null,null,null,false,1.8]],
+    [["Tab","Tab",null,null,null,false,1.5],...["Q","W","E","R","T","Y","U","I","O","P"].map(c => ["Key" + c, c.toLowerCase(), c]),["BracketLeft","ğ","Ğ","[","{",true],["BracketRight","ö","Ö","]","}",true],["Backslash","ç","Ç","\\","|",true,1.3]],
+    [["CapsLock","Caps",null,null,null,false,1.8],...["A","S","D","F","G","H","J","K","L"].map(c => ["Key" + c, c.toLowerCase(), c]),["Semicolon","ş","Ş",";",":",true],["Quote",TUTUQ,"\"","'",null,true],["Enter","Enter",null,null,null,false,2]],
+    [["ShiftLeft","Shift",null,null,null,false,2.4],...["Z","X","C","V","B","N","M"].map(c => ["Key" + c, c.toLowerCase(), c]),["Comma",",","<"],["Period",".",">"],["Slash","/","?"],["ShiftRight","Shift",null,null,null,false,2.6]],
+    [["ControlLeft","Ctrl",null,null,null,false,1.4],["MetaLeft","Win",null,null,null,false,1.4],["AltLeft","Alt",null,null,null,false,1.4],["Space","",null,null,null,false,7],["AltRight","AltGr",null,null,null,false,1.4],["ControlRight","Ctrl",null,null,null,false,1.4]],
+  ];
+  const PCMAP = {};
+  PC.flat().forEach(k => PCMAP[k[0]] = k);
+  const pcEl = document.getElementById("pc");
+  let vShift = false, vAlt = false;
+  function renderPC() {
+    pcEl.innerHTML = PC.map(row => `<div class="r">${row.map(([code, n, s, a, as, isNew, w]) => {
+      const fn = s === null;
+      const cls = ["pk"];
+      if (fn) cls.push("fn");
+      if (isNew) cls.push("new");
+      if ((code.startsWith("Shift") && vShift) || (code === "AltRight" && vAlt)) cls.push("on");
+      const style = w ? ` style="flex-grow:${w}"` : "";
+      const isLetter = /^Key/.test(code) || (isNew && s === n.toUpperCase());
+      const inner = fn ? `<span class="main">${n}</span>`
+        : `${!isLetter && s !== n.toUpperCase() ? `<span class="shift">${escapeHtml(s)}</span>` : ""}<span class="main">${escapeHtml(isLetter ? s : n)}</span>${a ? `<span class="alt">${escapeHtml(a)}</span>` : ""}`;
+      return `<button type="button" tabindex="-1" class="${cls.join(" ")}" data-code="${code}"${style}>${inner}</button>`;
+    }).join("")}</div>`).join("");
+  }
+  renderPC();
+  const win = document.getElementById("winInput");
+  function insert(str) {
+    const st = win.selectionStart, en = win.selectionEnd;
+    win.setRangeText(str, st, en, "end");
+    win.focus();
+  }
+  function pcChar(code, shiftOn, altOn, caps) {
+    const k = PCMAP[code]; if (!k) return null;
+    const [, n, s, a, as] = k;
+    if (code === "Space") return " ";
+    if (code === "Enter") return "\n";
+    if (code === "Tab") return "\t";
+    if (s === null) return null;
+    if (altOn) return shiftOn ? (as ?? null) : (a ?? null);
+    const letter = n !== s && n.toUpperCase() === s;
+    const up = letter ? (shiftOn !== caps) : shiftOn;
+    return up ? s : n;
+  }
+  function flash(code) {
+    const b = pcEl.querySelector(`[data-code="${code}"]`);
+    if (!b) return;
+    b.classList.add("down"); setTimeout(() => b.classList.remove("down"), 110);
+  }
+  win.addEventListener("keydown", e => {
+    if (e.metaKey || (e.ctrlKey && !e.altKey)) return; // Ctrl+C/V/A и т.п. работают как обычно
+    const altOn = e.getModifierState("AltGraph") || (e.ctrlKey && e.altKey);
+    flash(e.code);
+    if (e.code === "Backspace" || e.code.startsWith("Arrow") || e.code === "Delete") return;
+    const ch = pcChar(e.code, e.shiftKey, altOn, e.getModifierState("CapsLock"));
+    if (ch === null) { if (PCMAP[e.code] && PCMAP[e.code][2] !== null) e.preventDefault(); return; }
+    e.preventDefault();
+    insert(ch);
+  });
+  pcEl.addEventListener("click", e => {
+    const b = e.target.closest(".pk"); if (!b) return;
+    const code = b.dataset.code;
+    if (code.startsWith("Shift")) { vShift = !vShift; renderPC(); return; }
+    if (code === "AltRight") { vAlt = !vAlt; renderPC(); return; }
+    if (code === "Backspace") {
+      const st = win.selectionStart, en = win.selectionEnd;
+      if (st === en && st > 0) win.setRangeText("", st - 1, en, "end"); else win.setRangeText("", st, en, "end");
+      win.focus(); return;
+    }
+    const ch = pcChar(code, vShift, vAlt, false);
+    if (ch === null) return;
+    insert(ch);
+    if (vShift || vAlt) { vShift = false; vAlt = false; renderPC(); }
+    flash(code);
+  });
+  // Переключатель языка: выбор запоминается только в этом браузере.
+  const setLang = l => {
+    document.documentElement.lang = l;
+    document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === l)));
+    try { localStorage.setItem("alifbo-lang", l); } catch (e) {}
+    runConv(); renderField();
+  };
+  document.querySelectorAll(".langs button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  let saved = null; try { saved = localStorage.getItem("alifbo-lang"); } catch (e) {}
+  setLang(saved || ((navigator.language || "").toLowerCase().startsWith("ru") ? "ru" : "uz"));
+})();
+</script>
