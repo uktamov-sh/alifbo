@@ -9,6 +9,8 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 на основных рядах, а не прячутся под долгим нажатием. Клавиатура не подключается к интернету и не
 сохраняет набранный текст.
 
+**Сайт:** https://uktamov-sh.github.io/alifbo/ · **Скачать:** [выпуски](https://github.com/uktamov-sh/alifbo/releases)
+
 <p>
   <img src="docs/screenshots/android-light.png" width="260" alt="Клавиатура в светлой теме">
   <img src="docs/screenshots/android-dark.png" width="260" alt="Клавиатура в тёмной теме">
@@ -16,15 +18,29 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 
 ## Что есть
 
-- **Android-клавиатура** (`app`): узбекская и русская раскладки, подсказки слов, кнопка
-  «eski→yangi», которая переписывает старую латиницу и кириллицу на новый алфавит. Android 8.0+.
-- **Конвертер** (`converter`): библиотека на Kotlin без зависимостей. Правила описаны в
-  [spec/converter-rules.md](spec/converter-rules.md).
+- **Android-клавиатура** (`app`, Android 8.0+): узбекская и русская раскладки, подсказки из словаря
+  на 60 000 узбекских и 48 000 русских слов, кнопка «eski→yangi», эмодзи, крупная буква при нажатии,
+  настройки (вибрация, звук, высота клавиш), TalkBack.
 - **Раскладка Windows** (`windows`): системная раскладка «Özbek (yangi alifbo)» для Windows 10 и 11,
   x64 и ARM64.
-- **Прототип** (`prototype`): страница, где можно попробовать раскладки Android и Windows и конвертер.
+- **Конвертер для Windows** (`windows/converter`): значок в трее. Выделите текст в любой программе
+  и нажмите **Ctrl+Shift+Y** — он перепишется на новый алфавит.
+- **Конвертер** (`converter`): библиотека на Kotlin без зависимостей. Правила —
+  [spec/converter-rules.md](spec/converter-rules.md), эталоны — [spec/cases.txt](spec/cases.txt).
+  Версии на C# и JavaScript проверяются теми же эталонами.
+- **Прототип** (`prototype`) и **сайт** (`docs`).
+
+## Android
+
+Скачайте `alifbo-0.1.0.apk` из [выпусков](https://github.com/uktamov-sh/alifbo/releases), установите,
+откройте приложение и следуйте трём шагам на экране. Отпечаток сертификата подписи (SHA-256):
+`f6:56:a0:83:5b:65:c1:ac:67:0e:61:b2:8e:67:fe:22:20:fc:61:c0:2d:4c:71:42:55:99:48:7c:ae:a4:20:2d`.
 
 ## Windows
+
+Скачайте `alifbo-setup-0.1.0.exe` из [выпусков](https://github.com/uktamov-sh/alifbo/releases) и
+запустите. Установщик ставит раскладку и конвертер, а удаляется обычным способом через «Приложения».
+Переключайтесь на раскладку сочетанием Win + Пробел.
 
 Основа — американская раскладка. Пять клавиш справа дают новые буквы, а прежние символы
 доступны через AltGr (правый Alt):
@@ -37,31 +53,25 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 | `;` | ş | Ş | `;` | `:` |
 | `'` | ʼ | `"` | `'` | |
 
-Установка:
-
-1. Скачайте `alifbo-windows` из последней успешной сборки во вкладке
-   [Actions](https://github.com/uktamov-sh/alifbo/actions/workflows/ci.yml) и распакуйте.
-2. Откройте PowerShell от имени администратора в этой папке.
-3. Запустите:
-   ```powershell
-   Get-ChildItem -Recurse | Unblock-File
-   powershell -ExecutionPolicy Bypass -File .\install.ps1
-   ```
-4. Переключайтесь на раскладку сочетанием Win + Пробел.
-
-Установщик сверяет файлы с `SHA256SUMS` и ничего не скачивает. Удаление: `uninstall.ps1` так же,
-от имени администратора. Пакет пока не подписан цифровой подписью, поэтому Windows может
-предупредить о неизвестном издателе.
+Установщик пока не подписан цифровой подписью, поэтому Windows SmartScreen может предупредить о
+неизвестном издателе («Подробнее» → «Выполнить в любом случае»). Без установщика: пакет
+`alifbo-windows.zip` с `install.ps1`, который сверяет файлы с `SHA256SUMS`.
 
 ## Безопасность
 
 Клавиатура видит всё, что набирает человек, поэтому защита заложена в устройство приложения:
 
-- У приложения нет ни одного разрешения, в том числе доступа в интернет. Сборка падает, если
+- У Android-приложения нет ни одного разрешения, в том числе доступа в интернет. Сборка падает, если
   разрешение появится (задача `checkReleasePermissions`).
-- В полях паролей и PIN-кодов клавиатура не читает текст вокруг курсора и ничего не подсказывает.
+- В полях паролей и PIN-кодов клавиатура не читает текст вокруг курсора, ничего не подсказывает,
+  не показывает нажатую букву крупно, а TalkBack называет клавиши «символ» (буквы — только в наушниках).
 - Набранный текст не сохраняется и не пишется в журнал. Резервное копирование в облако запрещено.
 - Нет аналитики, рекламы и сторонних библиотек.
+- Конвертер для Windows читает буфер обмена только по Ctrl+Shift+Y и через секунду возвращает в нём
+  прежний текст.
+- Действия GitHub Actions закреплены по хешу коммита, у сборки только доступ на чтение.
+
+[Политика конфиденциальности](https://uktamov-sh.github.io/alifbo/privacy.html)
 
 ## Сборка и тесты
 
@@ -69,19 +79,20 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 
 ```bash
 ./gradlew :converter:test :app:testDebugUnitTest :app:assembleDebug
-```
-
-Конвертер на Kotlin и его JavaScript-копия в прототипе проверяются одними эталонами
-[spec/cases.txt](spec/cases.txt):
-
-```bash
 node prototype/converter.test.js
 ```
 
-То же самое запускается на GitHub Actions при каждом коммите. Готовые APK лежат в артефактах
-сборки (`alifbo-apk`). Релизная APK пока без подписи.
+Раскладка и установщик Windows собираются на GitHub Actions (нужны Visual Studio с C++, Windows Driver
+Kit, .NET SDK и Inno Setup): `windows/build.ps1`, затем `windows/installer/build-installer.ps1`.
+При каждом коммите автосборка ставит раскладку и установщик на одноразовые машины Windows x64 и ARM64,
+проверяет символы через `ToUnicodeEx`, горячую клавишу в Блокноте и удаление.
+
+Словари подсказок собирает workflow [Dictionary](.github/workflows/dictionary.yml) из узбекской
+Википедии и FrequencyWords (оба CC BY-SA 4.0). Материалы для Google Play и F-Droid — в
+[store](store/README.md).
 
 ## Лицензия
 
 [GPL-3.0](LICENSE). Любая доработка этой клавиатуры тоже должна оставаться открытой, чтобы каждый
-мог проверить, что она ничего не собирает.
+мог проверить, что она ничего не собирает. Словари — CC BY-SA 4.0 (авторы узбекской Википедии,
+FrequencyWords by Hermit Dave).

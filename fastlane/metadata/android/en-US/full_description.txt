@@ -1,0 +1,19 @@
+Alifbo is a keyboard for the new Uzbek Latin alphabet adopted by law O‘RQ-1184 of 21 October 2026.
+
+The new letters Ş, Ç, Ö, Ğ and the tutuq belgisi ʼ sit on the main rows, no long press needed.
+
+• Uzbek (new alphabet) and Russian layouts, switch with the 🌐 key
+• Word suggestions from a 60,000-word dictionary
+• "eski→yangi" button: converts old Latin or Cyrillic Uzbek text to the new alphabet
+• Emoji, numbers and symbols
+• Key preview, vibration, sound, adjustable key height
+• Light and dark themes
+• Works with TalkBack
+
+Privacy:
+• The app requests no permissions at all, not even internet access. You can check this in your phone's app settings.
+• In password and PIN fields the keyboard does not read text and shows no suggestions.
+• Typed text is never stored or logged.
+• No ads, no analytics. Open source (GPL-3.0): github.com/uktamov-sh/alifbo
+
+Also available for Windows: the "Özbek (yangi alifbo)" layout and a Ctrl+Shift+Y converter — uktamov-sh.github.io/alifbo

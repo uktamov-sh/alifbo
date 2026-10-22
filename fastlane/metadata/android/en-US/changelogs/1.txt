@@ -1,0 +1,1 @@
+First release: new-alphabet layout, Russian layout, word suggestions, "eski→yangi" converter, emoji, settings, TalkBack.

@@ -1,0 +1,19 @@
+Alifbo — 21.10.2026 dagi O‘RQ-1184-son Qonun bilan tasdiqlangan yangi özbek alifbosi uçun klaviatura.
+
+Yangi harflar Ş, Ç, Ö, Ğ va tutuq belgisi ʼ uzoq bosişsiz, asosiy qatorlarda turadi.
+
+• Özbekça (yangi alifbo) va rusça tartib, 🌐 tugmasi bilan almaştiriş
+• 60 000 söz luğatidan söz tavsiyalari
+• «eski→yangi» tugmasi: eski lotin yoki kirill yozuvidagi matnni bir bosişda yangi alifboga öğiradi
+• Emoji, raqamlar va belgilar
+• Bosilgan harfni kattalaştirib körsatiş, tebraniş, ovoz, tugmalar balandligi
+• Yoruğ va qoronği mavzu
+• TalkBack bilan işlaydi
+
+Xavfsizlik:
+• Ilovada birorta ham ruxsat yöq, internet ham. Buni telefon sozlamalarida tekşiriş mumkin.
+• Parol va PIN-kod maydonlarida klaviatura matnni öqimaydi va tavsiya bermaydi.
+• Yozilgan matn saqlanmaydi va jurnalga yozilmaydi.
+• Reklama va statistika yöq. Kod oçiq (GPL-3.0): github.com/uktamov-sh/alifbo
+
+Windows uçun ham bor: «Özbek (yangi alifbo)» tartibi va Ctrl+Shift+Y konvertori — uktamov-sh.github.io/alifbo
