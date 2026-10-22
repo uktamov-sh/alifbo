@@ -44,7 +44,8 @@ if (-not $layoutId) {
     # Layout Id должен быть уникальным среди всех раскладок системы.
     $used = Get-ChildItem $LayoutsKey | ForEach-Object { (Get-ItemProperty $_.PSPath).'Layout Id' } |
         Where-Object { $_ } | ForEach-Object { [Convert]::ToInt32($_, 16) }
-    $layoutId = '{0:x4}' -f (($used | Measure-Object -Maximum).Maximum + 1)
+    $max = [int](($used | Measure-Object -Maximum).Maximum)
+    $layoutId = '{0:x4}' -f ($max + 1)
 }
 New-Item -Path $key -Force | Out-Null
 Set-ItemProperty $key 'Layout File' $Dll
