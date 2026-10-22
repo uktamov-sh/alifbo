@@ -53,6 +53,7 @@ $sums = Get-ChildItem $pkg -Recurse -File | Sort-Object FullName | ForEach-Objec
     $rel = $_.FullName.Substring($pkg.FullName.Length + 1).Replace('\', '/')
     "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())  $rel"
 }
-[IO.File]::WriteAllLines("$pkg\SHA256SUMS", $sums)
+# Переносы LF, чтобы файл проверялся и стандартной утилитой sha256sum -c.
+[IO.File]::WriteAllText("$pkg\SHA256SUMS", ($sums -join "`n") + "`n")
 Write-Host "Пакет: $pkg"
 $sums | ForEach-Object { Write-Host "  $_" }
