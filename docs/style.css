@@ -1,0 +1,63 @@
+/* Сайт Alifbo: только системные шрифты и ни одного внешнего запроса. */
+:root {
+  --bg: #f2f4f8; --surface: #ffffff; --ink: #131a2c; --muted: #5a637c; --line: #d8dde9;
+  --lapis: #1e3c9e; --turq: #0e8f87; --turq-soft: #dff3f1;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1020; --surface: #151a2c; --ink: #e7eaf4; --muted: #9aa2bc; --line: #283050;
+    --lapis: #8aa2ff; --turq: #45d1c5; --turq-soft: #12302e;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.6 "Segoe UI", Roboto, "Noto Sans", system-ui, sans-serif;
+  padding: 32px max(16px, env(safe-area-inset-right)) 64px max(16px, env(safe-area-inset-left));
+}
+main { max-width: 880px; margin: 0 auto; display: grid; gap: 48px; }
+h1, h2 { line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 6vw, 3rem); }
+h1 .acc { color: var(--turq); }
+h2 { font-size: 1.45rem; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--lapis); }
+.lead { color: var(--muted); font-size: 1.1rem; }
+section { display: grid; gap: 16px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { font-weight: 700; letter-spacing: 0.02em; }
+.langs { display: flex; gap: 6px; }
+.langs button {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 14px; cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--lapis); border-color: var(--lapis); color: var(--surface); }
+.letters { display: flex; flex-wrap: wrap; gap: 8px; }
+.letters span {
+  font-size: 1.6rem; font-weight: 700; min-width: 56px; text-align: center; padding: 6px 10px;
+  border-radius: 10px; border: 1px solid var(--turq); background: var(--turq-soft); color: var(--turq);
+}
+.downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+  padding: 18px 20px; display: grid; gap: 10px; align-content: start;
+}
+.card h3 { margin: 0; font-size: 1.1rem; }
+.btn {
+  display: inline-block; justify-self: start; background: var(--lapis); color: var(--surface);
+  text-decoration: none; border-radius: 8px; padding: 8px 16px; font-weight: 600;
+}
+.shots { display: flex; gap: 16px; flex-wrap: wrap; }
+.shots img { width: min(260px, 100%); border-radius: 16px; border: 1px solid var(--line); }
+ul { margin: 0; padding-left: 22px; display: grid; gap: 6px; max-width: 65ch; }
+li::marker { color: var(--turq); }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; min-width: 420px; }
+th, td { border: 1px solid var(--line); padding: 6px 12px; text-align: center; }
+th { background: var(--surface); }
+td.new { color: var(--turq); font-weight: 700; font-size: 1.2rem; }
+kbd { font-family: Consolas, "Roboto Mono", monospace; font-size: 0.9em; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; background: var(--surface); }
+footer { color: var(--muted); font-size: 14px; display: grid; gap: 4px; }
+html[lang="uz"] [lang="ru"], html[lang="ru"] [lang="uz"] { display: none !important; }
