@@ -1,5 +1,7 @@
 # Alifbo
 
+[![CI](https://github.com/uktamov-sh/alifbo/actions/workflows/ci.yml/badge.svg)](https://github.com/uktamov-sh/alifbo/actions/workflows/ci.yml)
+
 Klaviatura yangi özbek alifbosi uçun (21.10.2026 dagi O‘RQ-1184-son Qonun). Ş, Ç, Ö va Ğ harflari
 asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni saqlamaydi.
 
@@ -46,6 +48,9 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 ```bash
 node prototype/converter.test.js
 ```
+
+То же самое запускается на GitHub Actions при каждом коммите. Готовые APK лежат в артефактах
+сборки (`alifbo-apk`). Релизная APK пока без подписи.
 
 ## Лицензия
 

@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Сборке нужен только доступ на чтение кода.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # Действия закреплены по хешу коммита: подмена тега не подменит код сборки.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # Также проверяет, что gradle-wrapper.jar совпадает с официальным.
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Конвертер прототипа (JavaScript) на общих эталонах
+        run: node prototype/converter.test.js
+
+      - name: Тесты конвертера и клавиатуры
+        run: ./gradlew --no-daemon :converter:test :app:testDebugUnitTest
+
+      - name: Проверка, что у приложения нет разрешений
+        run: ./gradlew --no-daemon :app:checkDebugPermissions :app:checkReleasePermissions
+
+      - name: Сборка APK
+        run: ./gradlew --no-daemon :app:assembleDebug :app:assembleRelease
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: alifbo-apk
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: failure()
+        with:
+          name: test-reports
+          path: |
+            converter/build/reports/tests/
+            app/build/reports/tests/
+          retention-days: 7
