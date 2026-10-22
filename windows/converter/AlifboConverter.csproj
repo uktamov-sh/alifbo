@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- .NET Framework 4.8 уже есть в Windows 10 и 11: ничего доустанавливать не нужно. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>AlifboConverter</AssemblyName>
+    <RootNamespace>Alifbo</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <Version>0.1.0</Version>
+    <Product>Alifbo</Product>
+    <Description>Alifbo: eski matnni yangi özbek alifbosiga öğiriş (Ctrl+Shift+Y)</Description>
+    <Copyright>GPL-3.0, https://github.com/uktamov-sh/alifbo</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="AlifboConverter.cs" />
+    <Compile Include="TrayApp.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+</Project>
