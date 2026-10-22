@@ -52,7 +52,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         root.addView(strip, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)))
         keyboard = KeyboardView(this).also {
             it.listener = this
-            it.configure(settings, allowPreview = !policy.sensitive)
+            it.configure(settings, sensitiveField = policy.sensitive)
         }
         root.addView(keyboard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         // С Android 15 окно клавиатуры уходит под системную полосу навигации: поднимаем клавиши над ней.
@@ -72,7 +72,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         super.onStartInputView(info, restarting)
         policy = FieldPolicy.of(info.inputType)
         settings = KeyboardSettings.read(prefs)
-        keyboard?.configure(settings, allowPreview = !policy.sensitive)
+        keyboard?.configure(settings, sensitiveField = policy.sensitive)
         page = if (policy.startOnSymbols) Page.SYMBOLS else language
         refreshShift()
         render()

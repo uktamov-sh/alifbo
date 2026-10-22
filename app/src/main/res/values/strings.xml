@@ -50,4 +50,5 @@
     <string name="key_emoji_prev">Oldingi sahifa</string>
     <string name="key_emoji_next">Keyingi sahifa</string>
     <string name="key_tutuq">tutuq belgisi</string>
+    <string name="key_hidden">Belgi</string>
 </resources>

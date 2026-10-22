@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
@@ -47,6 +48,7 @@ class KeyboardView(context: Context) : View(context) {
     private var haptics = true
     private var sound = false
     private var preview = true
+    private var sensitiveField = false
 
     private val colorKey = context.getColor(R.color.key)
     private val colorSpecial = context.getColor(R.color.key_special)
@@ -78,16 +80,26 @@ class KeyboardView(context: Context) : View(context) {
     private var hovered = -1
     private var a11yFocused = -1
 
-    fun configure(settings: KeyboardSettings, allowPreview: Boolean) {
+    fun configure(settings: KeyboardSettings, sensitiveField: Boolean) {
         val height = settings.height.keyDp * dp
         val resized = height != keyHeight
         keyHeight = height
         haptics = settings.vibration
         sound = settings.sound
         // В полях паролей увеличенную букву не показываем: её видно со стороны.
-        preview = settings.preview && allowPreview
+        preview = settings.preview && !sensitiveField
+        this.sensitiveField = sensitiveField
         if (resized) requestLayout()
     }
+
+    /** Звук идёт в наушники, а не в динамик: тогда TalkBack может называть буквы пароля. */
+    private fun privateAudio(): Boolean =
+        audio.getDevices(AudioManager.GET_DEVICES_OUTPUTS).any {
+            it.type in setOf(
+                AudioDeviceInfo.TYPE_WIRED_HEADSET, AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                AudioDeviceInfo.TYPE_BLUETOOTH_A2DP, AudioDeviceInfo.TYPE_USB_HEADSET,
+            )
+        }
 
     fun setKeys(rows: List<List<Key>>, upper: Boolean, locked: Boolean, spaceLabel: String, lettersLabel: String) {
         val resized = rows.size != this.rows.size
@@ -206,9 +218,13 @@ class KeyboardView(context: Context) : View(context) {
         }
     }
 
-    /** Что произносит TalkBack. */
+    /**
+     * Что произносит TalkBack. В полях паролей вместо букв — «символ», чтобы пароль не прозвучал
+     * на всю комнату (как в системной клавиатуре Android); буквы называются только в наушниках.
+     */
     private fun describe(key: Key): String {
         key.text?.let {
+            if (sensitiveField && !privateAudio()) return context.getString(R.string.key_hidden)
             return if (it == Layouts.TUTUQ) context.getString(R.string.key_tutuq) else labelOf(key)
         }
         return context.getString(
