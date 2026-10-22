@@ -51,7 +51,8 @@ section { display: grid; gap: 16px; }
 }
 .shots { display: flex; gap: 16px; flex-wrap: wrap; }
 .shots img { width: min(260px, 100%); border-radius: 16px; border: 1px solid var(--line); }
-ul { margin: 0; padding-left: 22px; display: grid; gap: 6px; max-width: 65ch; }
+ul, ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; max-width: 65ch; }
+h3 { margin: 4px 0 0; font-size: 1.1rem; }
 li::marker { color: var(--turq); }
 .table-wrap { overflow-x: auto; }
 table { border-collapse: collapse; min-width: 420px; }
