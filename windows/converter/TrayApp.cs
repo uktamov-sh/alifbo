@@ -1,5 +1,6 @@
 // Alifbo: значок в трее. Выделите текст в любой программе и нажмите Ctrl+Shift+Y —
-// он перепишется со старой латиницы или кириллицы на новый алфавит.
+// он перепишется на новый алфавит. В меню значка можно выбрать другое направление:
+// нынешняя латиница или кириллица (выбор не сохраняется, при запуске снова новый алфавит).
 //
 // Приватность: программа не подключается к сети и ничего не записывает. Буфер обмена она читает
 // только в момент нажатия горячей клавиши и через секунду возвращает в нём прежний текст.
@@ -43,6 +44,10 @@ namespace Alifbo
         public static string MenuHint => Ru
             ? "Ctrl+Shift+Y: переписать выделенный текст"
             : "Ctrl+Shift+Y: belgilangan matnni öğiriş";
+        public static string MenuTarget => Ru ? "Ctrl+Shift+Y переводит:" : "Ctrl+Shift+Y öğiradi:";
+        public static string TargetNew => Ru ? "на новый алфавит (Ö, Ş)" : "yangi alifboga (Ö, Ş)";
+        public static string TargetOld => Ru ? "на нынешнюю латиницу (Oʻ, Sh)" : "amaldagi lotinga (Oʻ, Sh)";
+        public static string TargetCyr => Ru ? "на кириллицу" : "kirillga";
         public static string MenuAbout => Ru ? "О программе" : "Dastur haqida";
         public static string MenuExit => Ru ? "Выход" : "Çiqiş";
     }
@@ -54,12 +59,37 @@ namespace Alifbo
         private readonly System.Windows.Forms.Timer restoreTimer = new System.Windows.Forms.Timer { Interval = 1000 };
         private string savedClipboard;
         private bool busy;
+        private Func<string, string> convert = s => AlifboConverter.ToNewLatin(s, assumeOldLatin: true);
 
         public TrayContext()
         {
             hotkey = new HotkeyWindow(ConvertSelection);
             var menu = new ContextMenuStrip();
             menu.Items.Add(new ToolStripMenuItem(Texts.MenuHint) { Enabled = false });
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(new ToolStripMenuItem(Texts.MenuTarget) { Enabled = false });
+            var targets = new[]
+            {
+                new ToolStripMenuItem(Texts.TargetNew) { Checked = true },
+                new ToolStripMenuItem(Texts.TargetOld),
+                new ToolStripMenuItem(Texts.TargetCyr),
+            };
+            Func<string, string>[] converters =
+            {
+                s => AlifboConverter.ToNewLatin(s, assumeOldLatin: true),
+                AlifboConverter.ToOldLatin,
+                AlifboConverter.ToCyrillic,
+            };
+            for (int i = 0; i < targets.Length; i++)
+            {
+                int index = i;
+                targets[i].Click += (s, e) =>
+                {
+                    convert = converters[index];
+                    foreach (var t in targets) t.Checked = t == targets[index];
+                };
+                menu.Items.Add(targets[i]);
+            }
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(Texts.MenuAbout, null, (s, e) => Process.Start("https://github.com/uktamov-sh/alifbo"));
             menu.Items.Add(Texts.MenuExit, null, (s, e) => ExitThread());
@@ -88,7 +118,7 @@ namespace Alifbo
                     savedClipboard = null;
                     return;
                 }
-                string converted = AlifboConverter.ToNewLatin(selected, assumeOldLatin: true);
+                string converted = convert(selected);
                 if (converted == selected)
                 {
                     RestoreClipboard();

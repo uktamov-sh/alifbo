@@ -71,6 +71,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
     override fun onStartInputView(info: EditorInfo, restarting: Boolean) {
         super.onStartInputView(info, restarting)
         policy = FieldPolicy.of(info.inputType)
+        convertMenu = false
         settings = KeyboardSettings.read(prefs)
         keyboard?.configure(settings, sensitiveField = policy.sensitive)
         page = if (policy.startOnSymbols) Page.SYMBOLS else language
@@ -89,6 +90,9 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         refreshShift()
         render()
     }
+
+    /** Показан ли в полосе выбор направления конвертера (после долгого нажатия на «eski→yangi»). */
+    private var convertMenu = false
 
     private val onLetters get() = page == Page.UZ || page == Page.RU
 
@@ -111,6 +115,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
     }
 
     override fun onKey(key: Key, longPress: Boolean) {
+        convertMenu = false
         val ic = currentInputConnection ?: return
         if (longPress) {
             when {
@@ -165,7 +170,19 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         val s = strip ?: return
         s.removeAllViews()
         if (policy.sensitive) return
-        if (policy.converter) s.addView(chip(getString(R.string.convert), accent = true) { convertField() }, chipParams(weighted = false))
+        if (policy.converter && convertMenu) {
+            // Долгое нажатие на «eski→yangi»: выбор направления вместо подсказок.
+            s.addView(chip(getString(R.string.convert_to_new), accent = true) { convertField(::toNewFromKey) }, chipParams(weighted = true))
+            s.addView(chip(getString(R.string.convert_to_old)) { convertField(AlifboConverter::toOldLatin) }, chipParams(weighted = true))
+            s.addView(chip(getString(R.string.convert_to_cyrillic)) { convertField(AlifboConverter::toCyrillic) }, chipParams(weighted = true))
+            s.addView(chip("✕") { convertMenu = false; updateStrip() }, chipParams(weighted = false))
+            return
+        }
+        if (policy.converter) {
+            val c = chip(getString(R.string.convert), accent = true) { convertField(::toNewFromKey) }
+            c.setOnLongClickListener { convertMenu = true; updateStrip(); true }
+            s.addView(c, chipParams(weighted = false))
+        }
         if (!policy.suggestions || !settings.suggestions || !onLetters) return
         val before = currentInputConnection?.getTextBeforeCursor(48, 0) ?: return
         val word = Suggester.currentWord(before)
@@ -181,22 +198,23 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
         ic.endBatchEdit()
     }
 
-    /**
-     * Переписывает текст поля (или выделенный фрагмент) на новый алфавит. Только по нажатию.
-     * Текст всегда считается старым: sh/ch переписываются, даже если рядом уже есть Ş или Ç.
-     */
-    private fun convertField() {
+    /** По кнопке «eski→yangi» текст всегда считается старым: sh/ch переписываются, даже если рядом уже есть Ş или Ç. */
+    private fun toNewFromKey(text: String) = AlifboConverter.toNewLatin(text, assumeOldLatin = true)
+
+    /** Переписывает текст поля (или выделенный фрагмент) в выбранный алфавит. Только по нажатию. */
+    private fun convertField(convert: (String) -> String) {
+        convertMenu = false
         val ic = currentInputConnection ?: return
         val selected = ic.getSelectedText(0)
         if (!selected.isNullOrEmpty()) {
-            ic.commitText(AlifboConverter.toNewLatin(selected.toString(), assumeOldLatin = true), 1)
+            ic.commitText(convert(selected.toString()), 1)
             return
         }
         val before = ic.getTextBeforeCursor(MAX_CONVERT, 0)?.toString() ?: ""
         val after = ic.getTextAfterCursor(MAX_CONVERT, 0)?.toString() ?: ""
         val all = before + after
-        val converted = AlifboConverter.toNewLatin(all, assumeOldLatin = true)
-        if (converted == all) return
+        val converted = convert(all)
+        if (converted == all) { updateStrip(); return }
         ic.beginBatchEdit()
         ic.deleteSurroundingText(before.length, after.length)
         ic.commitText(converted, 1)
