@@ -1,0 +1,22 @@
+appId: uz.alifbo.keyboard
+name: Долгое нажатие на eski→yangi — перевод на кириллицу и нынешнюю латиницу
+---
+- runFlow: _open_field.yaml
+- tapOn: "C"
+- tapOn: "h"
+- tapOn: "o"
+- tapOn: "y"
+- assertVisible: "Choy"
+- longPressOn: "eski→yangi"
+- assertVisible: "→ кирилл"
+- tapOn: "→ кирилл"
+- assertVisible: "Чой"
+# После выбора меню закрывается, снова видна обычная кнопка.
+- assertVisible: "eski→yangi"
+- longPressOn: "eski→yangi"
+- tapOn: "→ lotin (eski)"
+- assertVisible: "Choy"
+- longPressOn: "eski→yangi"
+- tapOn: "✕"
+- assertVisible: "eski→yangi"
+- assertNotVisible: "→ кирилл"
