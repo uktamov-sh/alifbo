@@ -1,0 +1,58 @@
+# Эталоны перевода на кириллицу: «вход → ожидаемый результат».
+# Вход — новая латиница, старая латиница или их смесь. Кириллица остаётся как есть.
+
+# --- Буквы нового алфавита ---
+Özbekiston → Ўзбекистон
+şahar, çoy, toğ → шаҳар, чой, тоғ
+ÖZBEKISTON → ЎЗБЕКИСТОН
+Ğafur Ğulom → Ғафур Ғулом
+maʼno, möʼjiza, sanʼat → маъно, мўъжиза, санъат
+# s+h без Ş в тексте неотличимы от старого sh; рядом с Ş читаются раздельно
+Ishoq va Toşkent → Исҳоқ ва Тошкент
+Maşhur → Машҳур
+
+# --- Старая латиница ---
+Oʻzbekiston → Ўзбекистон
+O'zbekiston, shahar, choy → Ўзбекистон, шаҳар, чой
+Is'hoq → Исҳоқ
+ma'no → маъно
+Mashhur → Машҳур
+
+# --- е и э ---
+yer, poyezd, Yevropa → ер, поезд, Европа
+ekin, eshik → экин, эшик
+poeziya, aeroport → поэзия, аэропорт
+kecha, telefon, teatr → кеча, телефон, театр
+EKIN → ЭКИН
+
+# --- ё, ю, я ---
+yoz, yulduz, yaxşi → ёз, юлдуз, яхши
+dunyo, ayol, oyoq → дунё, аёл, оёқ
+kelyapti, qilyapti → келяпти, қиляпти
+Pyotr, aktyor, kostyum → Пётр, актёр, костюм
+Yuliya → Юлия
+Sergey → Сергей
+
+# --- ц ---
+militsiya, informatsiya, sotsial → милиция, информация, социал
+aksiya, stansiya, funksiya, konferensiya → акция, станция, функция, конференция
+otsiz, aytsa, ketsa → отсиз, айтса, кетса
+
+# --- Словарь заимствований ---
+sentyabr, sentyabrda → сентябрь, сентябрда
+Sentyabr → Сентябрь
+fevral → февраль
+sirk, sirkda, sirka → цирк, циркда, сирка
+sentr, konsert, prinsip, abzas → центр, концерт, принцип, абзац
+kompyuter, kompyuterlar, pyesa → компьютер, компьютерлар, пьеса
+obyekt, syezd, inyeksiya → объект, съезд, инъекция
+pensiya, versiya, Rossiya → пенсия, версия, Россия
+Olga, Natalya → Ольга, Наталья
+mebel, mebellar → мебель, мебеллар
+
+# --- Что не трогается ---
+Тошкент шаҳри → Тошкент шаҳри
+https://shop.uz va ali@mail.uz → https://shop.uz ва ali@mail.uz
+# слова со смешанным регистром (iPhone) не трогаются
+iPhone 15 → iPhone 15
+2026-yil → 2026-йил

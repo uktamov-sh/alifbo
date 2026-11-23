@@ -23,4 +23,5 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     systemProperty("alifbo.cases", rootProject.file("spec/cases.txt").absolutePath)
+    inputs.dir(rootProject.file("spec"))
 }

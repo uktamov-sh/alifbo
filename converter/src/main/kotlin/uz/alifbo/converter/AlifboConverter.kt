@@ -101,4 +101,125 @@ object AlifboConverter {
         }
         return out.toString()
     }
+
+    // --- Обратные направления: нынешняя латиница (1995) и кириллица ---
+    // Слово сначала приводится к новой латинице, потом переписывается в нужную систему.
+    // Правила и эталоны: spec/converter-rules.md, spec/cases-old-latin.txt, spec/cases-cyrillic.txt.
+
+    /** iPhone, WhatsApp: имена со смешанным регистром не трогаем. */
+    private val camelCase = Regex("""\p{Ll}.*\p{Lu}""")
+
+    private fun convertWords(text: String, convertWord: (String) -> String): String {
+        val keepShCh = newShCh.containsMatchIn(text)
+        return chunkRegex.replace(text) { chunk ->
+            val s = chunk.value
+            if (s.isBlank() || isAddress(s)) s
+            else wordRegex.replace(s) { m ->
+                val w = m.value
+                if (camelCase.containsMatchIn(w)) w
+                else convertWord(if (cyrillicLetter.containsMatchIn(w)) cyrillicWord(w) else oldLatinWord(w, keepShCh))
+            }
+        }
+    }
+
+    private class WordCase(val allCaps: Boolean, val capFirst: Boolean)
+
+    private fun caseOf(word: String): WordCase {
+        val cased = word.filter { it.isLetter() && it.lowercaseChar() != it.uppercaseChar() }
+        return WordCase(
+            allCaps = cased.length >= 2 && cased.none { it.isLowerCase() },
+            capFirst = cased.isNotEmpty() && cased[0].isUpperCase(),
+        )
+    }
+
+    private fun applyCase(out: String, c: WordCase): String = when {
+        c.allCaps -> out.uppercase()
+        c.capFirst && out.isNotEmpty() -> out.replaceFirstChar { it.uppercaseChar() }
+        else -> out
+    }
+
+    private val oldLetters = mapOf('ö' to "oʻ", 'ğ' to "gʻ", 'ş' to "sh", 'ç' to "ch")
+
+    /** Новая латиница → нынешняя: Ö → Oʻ, Ş → Sh; s+h, которые читаются раздельно, получают тутук. */
+    private fun oldLatinOf(word: String): String {
+        val lower = word.lowercase()
+        val out = StringBuilder()
+        lower.forEachIndexed { i, ch ->
+            val old = oldLetters[ch]
+            when {
+                old != null -> out.append(old)
+                (ch == 's' || ch == 'c') && lower.getOrNull(i + 1) == 'h' -> out.append(ch).append(TUTUQ)
+                else -> out.append(ch)
+            }
+        }
+        return applyCase(out.toString(), caseOf(word))
+    }
+
+    /** Переписывает текст на нынешнюю латиницу (1995): Oʻ, Gʻ, Sh, Ch. */
+    fun toOldLatin(text: String): String = convertWords(text, ::oldLatinOf)
+
+    // <cyrillic-words> — создано tools/gen-cyrillic-words.js из spec/cyrillic-words.txt, не править руками
+    private const val CYR_WORDS = "yanvar=январь|fevral=февраль|aprel=апрель|iyun=июнь|iyul=июль|sentyabr=сентябрь|oktyabr=октябрь|noyabr=ноябрь|dekabr=декабрь|sirk=цирк|sentr=центр|sentner=центнер|sement=цемент|sitata=цитата|siferblat=циферблат|silindr=цилиндр|sikl=цикл|sivilizatsiya=цивилизация|sex=цех|konsert=концерт|prinsip=принцип|abzas=абзац|kansler=канцлер|fransuz=француз|litsey=лицей|litsenziya=лицензия|kompyuter=компьютер|pyesa=пьеса|premyer=премьер|portfel=портфель|mebel=мебель|model=модель|medal=медаль|festival=фестиваль|dizel=дизель|rubl=рубль|spektakl=спектакль|albom=альбом|olga=ольга|natalya=наталья|ilya=илья|pavilyon=павильон|batalyon=батальон|pedal=педаль|tunnel=туннель|gospital=госпиталь|avtomobil=автомобиль|kalendar=календарь|lager=лагерь|ansambl=ансамбль|obyekt=объект|subyekt=субъект|obyektiv=объектив|obyom=объём|syezd=съезд|podyezd=подъезд|adyutant=адъютант|inyeksiya=инъекция|pensiya=пенсия|ekspansiya=экспансия"
+    // </cyrillic-words>
+    private val cyrWords: Map<String, String> = CYR_WORDS.split('|').filter { it.isNotEmpty() }
+        .associate { it.substringBefore('=') to it.substringAfter('=') }
+    private const val LAT_VOWELS = "aeiouö"
+    private const val LAT_CONSONANTS = "bdfgğhjklmnpqrsştvxyzç"
+    private val toCyr = mapOf(
+        'a' to "а", 'b' to "б", 'd' to "д", 'f' to "ф", 'g' to "г", 'ğ' to "ғ", 'h' to "ҳ", 'i' to "и",
+        'j' to "ж", 'k' to "к", 'l' to "л", 'm' to "м", 'n' to "н", 'o' to "о", 'ö' to "ў", 'p' to "п",
+        'q' to "қ", 'r' to "р", 's' to "с", 'ş' to "ш", 't' to "т", 'u' to "у", 'v' to "в", 'x' to "х",
+        'y' to "й", 'z' to "з", 'ç' to "ч", 'c' to "к", 'w' to "в",
+    )
+    private val iotated = mapOf('e' to "е", 'o' to "ё", 'u' to "ю", 'a' to "я")
+
+    /** Основа из словаря подходит, если за ней конец слова, согласная или «i» (sirkda, но не sirka). */
+    private fun dictionaryStem(lower: String): Pair<Int, String> {
+        for (n in lower.length downTo 2) {
+            val cyr = cyrWords[lower.substring(0, n)] ?: continue
+            val next = lower.getOrNull(n) ?: return n to cyr
+            if (next in LAT_CONSONANTS || next == 'i') return n to cyr.removeSuffix("ь")
+        }
+        return 0 to ""
+    }
+
+    /** Новая латиница → кириллица. */
+    private fun cyrillicOf(word: String): String {
+        val lower = word.lowercase()
+        val (start, stem) = dictionaryStem(lower)
+        val out = StringBuilder(stem)
+        var i = start
+        while (i < lower.length) {
+            val ch = lower[i]
+            val next = lower.getOrNull(i + 1)
+            val prev = lower.getOrNull(i - 1)
+            val afterVowel = prev != null && prev in LAT_VOWELS
+            val afterConsonant = prev != null && prev in LAT_CONSONANTS
+            when {
+                ch == 'y' && next != null && next in iotated -> {
+                    // pyesa → пьеса; dunyo, kelyapti → дунё, келяпти
+                    if (next == 'e' && afterConsonant) out.append('ь')
+                    out.append(iotated.getValue(next))
+                    i++
+                }
+                ch == 'e' -> out.append(if (afterVowel || !afterConsonant) "э" else "е")
+                ch == 't' && next == 's' && lower.getOrNull(i + 2) == 'i' &&
+                    (lower.getOrNull(i + 3)?.let { it in LAT_VOWELS || it == 'y' } == true) -> {
+                    out.append('ц')   // militsiya, sotsial; но otsiz, aytsin — тс
+                    i++
+                }
+                ch == 's' && (prev == 'k' || prev == 'n') && lower.startsWith("siya", i) -> {
+                    out.append("ция")   // aksiya, stansiya
+                    i += 3
+                }
+                ch == TUTUQ -> out.append('ъ')
+                else -> out.append(toCyr[ch] ?: word.getOrNull(i)?.toString() ?: ch.toString())
+            }
+            i++
+        }
+        return applyCase(out.toString(), caseOf(word))
+    }
+
+    /** Переписывает латинский текст (новый или нынешний алфавит) на кириллицу. Кириллица остаётся как есть. */
+    fun toCyrillic(text: String): String = convertWords(text, ::cyrillicOf)
 }

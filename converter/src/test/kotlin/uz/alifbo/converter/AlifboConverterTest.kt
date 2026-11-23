@@ -12,13 +12,13 @@ class AlifboConverterTest {
 
     private data class Case(val line: Int, val input: String, val expected: String)
 
-    private fun loadCases(): List<Case> {
+    private fun loadCases(name: String = "cases.txt"): List<Case> {
         val path = System.getProperty("alifbo.cases") ?: error("Не задан путь к spec/cases.txt")
-        return File(path).readLines(Charsets.UTF_8).mapIndexedNotNull { i, raw ->
+        return File(File(path).parentFile, name).readLines(Charsets.UTF_8).mapIndexedNotNull { i, raw ->
             val line = raw.trim()
             if (line.isEmpty() || line.startsWith("#")) return@mapIndexedNotNull null
             val parts = line.split(" → ")
-            require(parts.size == 2) { "cases.txt:${i + 1}: ожидается «вход → результат»" }
+            require(parts.size == 2) { "$name:${i + 1}: ожидается «вход → результат»" }
             Case(i + 1, parts[0].replace("\\n", "\n"), parts[1].replace("\\n", "\n"))
         }
     }
@@ -33,6 +33,22 @@ class AlifboConverterTest {
             }
         }
     }
+
+    @TestFactory
+    fun `эталоны перевода на нынешнюю латиницу`(): List<DynamicTest> =
+        loadCases("cases-old-latin.txt").map { c ->
+            DynamicTest.dynamicTest("стр. ${c.line}: ${c.input}") {
+                assertEquals(c.expected, AlifboConverter.toOldLatin(c.input))
+            }
+        }
+
+    @TestFactory
+    fun `эталоны перевода на кириллицу`(): List<DynamicTest> =
+        loadCases("cases-cyrillic.txt").map { c ->
+            DynamicTest.dynamicTest("стр. ${c.line}: ${c.input}") {
+                assertEquals(c.expected, AlifboConverter.toCyrillic(c.input))
+            }
+        }
 
     // Слово вроде «Ishoq» без Ş/Ç не отличить от старой латиницы, такие результаты пропускаем.
     @Test

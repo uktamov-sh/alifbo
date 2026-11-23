@@ -63,7 +63,113 @@
     });
   }
 
-  const api = { toNewLatin, TUTUQ };
+  // --- Обратные направления: нынешняя латиница (1995) и кириллица ---
+  // Слово сначала приводится к новой латинице, потом переписывается в нужную систему.
+  // Правила и эталоны: spec/converter-rules.md, spec/cases-old-latin.txt, spec/cases-cyrillic.txt.
+
+  const camelCase = /\p{Ll}.*\p{Lu}/u;   // iPhone, WhatsApp: имена, не трогаем
+
+  function convertWords(text, convertWord) {
+    const keepShCh = newShCh.test(text);
+    return text.replace(chunkRe, s => {
+      if (/^\s+$/u.test(s) || isAddress(s)) return s;
+      return s.replace(wordRe, w => {
+        if (camelCase.test(w)) return w;
+        return convertWord(cyrLetter.test(w) ? cyrillicWord(w) : oldLatinWord(w, keepShCh), w);
+      });
+    });
+  }
+
+  function caseOf(word) {
+    const cased = Array.from(word).filter(c => isUpper(c) || isLower(c));
+    return {
+      allCaps: cased.length >= 2 && !cased.some(isLower),
+      capFirst: cased.length > 0 && isUpper(cased[0]),
+    };
+  }
+
+  function applyCase(out, { allCaps, capFirst }) {
+    if (allCaps) return out.toUpperCase();
+    return capFirst ? out[0].toUpperCase() + out.slice(1) : out;
+  }
+
+  const OLD = { "ö": "oʻ", "ğ": "gʻ", "ş": "sh", "ç": "ch" };
+
+  // Новая латиница → нынешняя: Ö → Oʻ, Ş → Sh; s+h, которые читаются раздельно, получают тутук.
+  function oldLatinOf(word) {
+    const c = caseOf(word);
+    const lower = word.toLowerCase();
+    let out = "";
+    for (let i = 0; i < lower.length; i++) {
+      const ch = lower[i];
+      if (OLD[ch]) out += OLD[ch];
+      else if ((ch === "s" || ch === "c") && lower[i + 1] === "h") out += ch + TUTUQ;
+      else out += ch;
+    }
+    return c.allCaps ? out.toUpperCase() : applyCase(out, c);
+  }
+
+  function toOldLatin(text) {
+    return convertWords(text, oldLatinOf);
+  }
+
+  // <cyrillic-words> — создано tools/gen-cyrillic-words.js из spec/cyrillic-words.txt, не править руками
+  const CYR_WORDS = "yanvar=январь|fevral=февраль|aprel=апрель|iyun=июнь|iyul=июль|sentyabr=сентябрь|oktyabr=октябрь|noyabr=ноябрь|dekabr=декабрь|sirk=цирк|sentr=центр|sentner=центнер|sement=цемент|sitata=цитата|siferblat=циферблат|silindr=цилиндр|sikl=цикл|sivilizatsiya=цивилизация|sex=цех|konsert=концерт|prinsip=принцип|abzas=абзац|kansler=канцлер|fransuz=француз|litsey=лицей|litsenziya=лицензия|kompyuter=компьютер|pyesa=пьеса|premyer=премьер|portfel=портфель|mebel=мебель|model=модель|medal=медаль|festival=фестиваль|dizel=дизель|rubl=рубль|spektakl=спектакль|albom=альбом|olga=ольга|natalya=наталья|ilya=илья|pavilyon=павильон|batalyon=батальон|pedal=педаль|tunnel=туннель|gospital=госпиталь|avtomobil=автомобиль|kalendar=календарь|lager=лагерь|ansambl=ансамбль|obyekt=объект|subyekt=субъект|obyektiv=объектив|obyom=объём|syezd=съезд|podyezd=подъезд|adyutant=адъютант|inyeksiya=инъекция|pensiya=пенсия|ekspansiya=экспансия";
+  // </cyrillic-words>
+  const cyrWords = new Map(CYR_WORDS.split("|").filter(Boolean).map(p => p.split("=")));
+  const LAT_VOWELS = "aeiouö";
+  const LAT_CONSONANTS = "bdfgğhjklmnpqrsştvxyzç";
+  const TO_CYR = { a:"а",b:"б",d:"д",f:"ф",g:"г","ğ":"ғ",h:"ҳ",i:"и",j:"ж",k:"к",l:"л",m:"м",n:"н",o:"о","ö":"ў",p:"п",q:"қ",r:"р",s:"с","ş":"ш",t:"т",u:"у",v:"в",x:"х",y:"й",z:"з","ç":"ч",c:"к",w:"в" };
+  const IOTATED = { e: "е", o: "ё", u: "ю", a: "я" };
+
+  // Основа из словаря подходит, если за ней конец слова, согласная или «i» (sirkda, но не sirka).
+  function dictionaryStem(lower) {
+    for (let n = lower.length; n >= 2; n--) {
+      const cyr = cyrWords.get(lower.slice(0, n));
+      if (cyr === undefined) continue;
+      const next = lower[n];
+      if (next === undefined) return [n, cyr];
+      if (LAT_CONSONANTS.includes(next) || next === "i") return [n, cyr.endsWith("ь") ? cyr.slice(0, -1) : cyr];
+    }
+    return [0, ""];
+  }
+
+  // Новая латиница → кириллица.
+  function cyrillicOf(word) {
+    const c = caseOf(word);
+    const lower = word.toLowerCase();
+    let [i, out] = dictionaryStem(lower);
+    for (; i < lower.length; i++) {
+      const ch = lower[i], next = lower[i + 1];
+      const prev = i > 0 ? lower[i - 1] : "";
+      const afterVowel = prev !== "" && LAT_VOWELS.includes(prev);
+      const afterConsonant = prev !== "" && LAT_CONSONANTS.includes(prev);
+      if (ch === "y" && next in IOTATED) {
+        // pyesa → пьеса; dunyo, kelyapti → дунё, келяпти
+        out += (next === "e" && afterConsonant ? "ь" : "") + IOTATED[next];
+        i++;
+      } else if (ch === "e") {
+        out += afterVowel || !afterConsonant ? "э" : "е";
+      } else if (ch === "t" && next === "s" && lower[i + 2] === "i" && (LAT_VOWELS + "y").includes(lower[i + 3] || "-")) {
+        out += "ц";   // militsiya, sotsial; но otsiz, aytsin — тс
+        i++;
+      } else if (ch === "s" && (prev === "k" || prev === "n") && lower.startsWith("siya", i)) {
+        out += "ция";   // aksiya, stansiya
+        i += 3;
+      } else if (ch === TUTUQ) {
+        out += "ъ";
+      } else {
+        out += TO_CYR[ch] ?? word[i];
+      }
+    }
+    return applyCase(out, c);
+  }
+
+  function toCyrillic(text) {
+    return convertWords(text, cyrillicOf);
+  }
+
+  const api = { toNewLatin, toOldLatin, toCyrillic, TUTUQ };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.AlifboConverter = api;
 })(this);

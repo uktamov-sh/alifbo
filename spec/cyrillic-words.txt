@@ -1,0 +1,77 @@
+# Словарь для перевода на кириллицу: «основа новой латиницей → основа кириллицей».
+# Нужен только для слов, которые правила (spec/converter-rules.md) пишут неверно:
+# в основном русские заимствования с ц, ь, ъ, э.
+# Основа срабатывает в начале слова, если за ней ничего нет, идёт согласная или «i»
+# (sirk, sirkda, sirki → цирк…, но sirka → сирка).
+# Конечный ь пишется только в конце слова: sentyabr → сентябрь, sentyabrda → сентябрда.
+# После правки запустить: node tools/gen-cyrillic-words.js
+
+# Месяцы
+yanvar январь
+fevral февраль
+aprel апрель
+iyun июнь
+iyul июль
+sentyabr сентябрь
+oktyabr октябрь
+noyabr ноябрь
+dekabr декабрь
+
+# ц
+sirk цирк
+sentr центр
+sentner центнер
+sement цемент
+sitata цитата
+siferblat циферблат
+silindr цилиндр
+sikl цикл
+sivilizatsiya цивилизация
+sex цех
+konsert концерт
+prinsip принцип
+abzas абзац
+kansler канцлер
+fransuz француз
+litsey лицей
+litsenziya лицензия
+
+# ь
+kompyuter компьютер
+pyesa пьеса
+premyer премьер
+portfel портфель
+mebel мебель
+model модель
+medal медаль
+festival фестиваль
+dizel дизель
+rubl рубль
+spektakl спектакль
+albom альбом
+olga ольга
+natalya наталья
+ilya илья
+pavilyon павильон
+batalyon батальон
+pedal педаль
+tunnel туннель
+gospital госпиталь
+avtomobil автомобиль
+kalendar календарь
+lager лагерь
+ansambl ансамбль
+
+# ъ
+obyekt объект
+subyekt субъект
+obyektiv объектив
+obyom объём
+syezd съезд
+podyezd подъезд
+adyutant адъютант
+inyeksiya инъекция
+
+# -сия, которая не -ция
+pensiya пенсия
+ekspansiya экспансия

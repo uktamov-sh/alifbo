@@ -1,0 +1,22 @@
+# Эталоны перевода на нынешнюю латиницу (1995): «вход → ожидаемый результат».
+# Oʻ и Gʻ пишутся с ʻ (U+02BB), тутук — ʼ (U+02BC).
+
+Özbekiston → Oʻzbekiston
+öğil → oʻgʻil
+ÖZBEKISTON → OʻZBEKISTON
+Ğafur Ğulom → Gʻafur Gʻulom
+şahar, çoy → shahar, choy
+Şahar → Shahar
+ŞAHAR, ÇOY → SHAHAR, CHOY
+Ş → Sh
+maʼno, möʼjiza → maʼno, moʻʼjiza
+# в тексте новым алфавитом s+h читаются раздельно, им нужен тутук
+Ishoq va Toşkent → Isʼhoq va Toshkent
+Isʼhoq → Isʼhoq
+# текст уже в нынешней латинице не меняется
+Oʻzbekiston, shahar, Ishoq → Oʻzbekiston, shahar, Ishoq
+O'zbekiston → Oʻzbekiston
+# кириллица
+Ўзбекистон шаҳри → Oʻzbekiston shahri
+Исҳоқ → Isʼhoq
+https://shop.uz → https://shop.uz

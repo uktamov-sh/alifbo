@@ -8,17 +8,27 @@ class Check
     static int Main(string[] args)
     {
         string path = args.Length > 0 ? args[0] : Path.Combine("spec", "cases.txt");
+        string dir = Path.GetDirectoryName(Path.GetFullPath(path));
         int total = 0, failed = 0;
-        string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        for (int i = 0; i < lines.Length; i++)
+        var files = new (string name, Func<string, string> convert)[]
         {
-            string line = lines[i].Trim();
-            if (line.Length == 0 || line.StartsWith("#")) continue;
-            string[] parts = line.Split(new[] { " → " }, StringSplitOptions.None);
-            string input = parts[0].Replace("\\n", "\n"), expected = parts[1].Replace("\\n", "\n");
-            total++;
-            string actual = AlifboConverter.ToNewLatin(input);
-            if (actual != expected) { failed++; Report("стр. " + (i + 1), input, expected, actual); }
+            (Path.GetFileName(path), s => AlifboConverter.ToNewLatin(s)),
+            ("cases-old-latin.txt", AlifboConverter.ToOldLatin),
+            ("cases-cyrillic.txt", AlifboConverter.ToCyrillic),
+        };
+        foreach (var (name, convert) in files)
+        {
+            string[] lines = File.ReadAllLines(Path.Combine(dir, name), System.Text.Encoding.UTF8);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i].Trim();
+                if (line.Length == 0 || line.StartsWith("#")) continue;
+                string[] parts = line.Split(new[] { " → " }, StringSplitOptions.None);
+                string input = parts[0].Replace("\\n", "\n"), expected = parts[1].Replace("\\n", "\n");
+                total++;
+                string actual = convert(input);
+                if (actual != expected) { failed++; Report(name + ":" + (i + 1), input, expected, actual); }
+            }
         }
         // Режим горячей клавиши: те же ожидания, что в AlifboConverterTest.kt и converter.test.js.
         string[,] hotkey =
