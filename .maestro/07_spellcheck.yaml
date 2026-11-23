@@ -11,7 +11,8 @@ name: Проверка орфографии — исправление и лич
 - tapOn: "Probel"
 - assertVisible: "+ lüğatga"
 - tapOn: "Maktab"
-- assertVisible: "Maktab"
+# В поле «Maktab » с пробелом; Maestro сравнивает текст целиком, поэтому регулярное выражение.
+- assertVisible: "Maktab\\s*"
 - assertNotVisible: "+ lüğatga"
 # Незнакомое слово добавляется в личный словарь, после этого исправлений нет.
 - tapOn: "q"
