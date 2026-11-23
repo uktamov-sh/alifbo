@@ -1,0 +1,1 @@
+New: long-press «eski→yangi» to convert to Cyrillic or the current Latin script, or to fix apostrophes (oʻ, ʼ). Uzbek spell check: corrections after space and a personal dictionary. Fixed: words like tog', bog' now convert; obyekt, syezd are written without ʼ.
