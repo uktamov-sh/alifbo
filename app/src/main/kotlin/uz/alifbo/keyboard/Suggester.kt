@@ -35,6 +35,23 @@ class Suggester(private val words: List<String>) {
             return beforeCursor.substring(start)
         }
 
+        /** Слово, которое только что закончили пробелом (можно со знаком препинания): «kitb, ». */
+        data class Completed(val word: String, val tail: String, val start: Int)
+
+        private val completedRegex = Regex("""([\p{L}${Layouts.TUTUQ}]+)([.,!?;:]?\s)$""")
+
+        fun lastCompletedWord(beforeCursor: CharSequence): Completed? {
+            val m = completedRegex.find(beforeCursor) ?: return null
+            return Completed(m.groupValues[1], m.groupValues[2], m.range.first)
+        }
+
+        /** Начинается ли с позиции [start] предложение: перед ним только пробелы и . ! ? или начало текста. */
+        fun startsSentence(beforeCursor: CharSequence, start: Int): Boolean {
+            var i = start - 1
+            while (i >= 0 && beforeCursor[i].isWhitespace() && beforeCursor[i] != '\n') i--
+            return i < 0 || beforeCursor[i] in ".!?\n"
+        }
+
         fun parse(text: String): List<String> =
             text.lineSequence().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }.toList()
     }

@@ -1,0 +1,23 @@
+appId: uz.alifbo.keyboard
+name: Проверка орфографии — исправление и личный словарь
+---
+- runFlow: _open_field.yaml
+# Опечатка в начале поля (заглавная ставится сама): после пробела появляется вариант исправления.
+- tapOn: "M"
+- tapOn: "a"
+- tapOn: "k"
+- tapOn: "t"
+- tapOn: "b"
+- tapOn: "Probel"
+- assertVisible: "+ lüğatga"
+- tapOn: "Maktab"
+- assertVisible: "Maktab"
+- assertNotVisible: "+ lüğatga"
+# Незнакомое слово добавляется в личный словарь, после этого исправлений нет.
+- tapOn: "q"
+- tapOn: "w"
+- tapOn: "r"
+- tapOn: "t"
+- tapOn: "Probel"
+- tapOn: "+ lüğatga"
+- assertNotVisible: "+ lüğatga"

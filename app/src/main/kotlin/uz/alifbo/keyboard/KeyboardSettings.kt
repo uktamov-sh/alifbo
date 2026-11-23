@@ -8,6 +8,7 @@ data class KeyboardSettings(
     val sound: Boolean,
     val preview: Boolean,
     val suggestions: Boolean,
+    val spellcheck: Boolean,
     val height: Height,
 ) {
     enum class Height(val keyDp: Int) { SMALL(44), MEDIUM(50), LARGE(58) }
@@ -18,6 +19,7 @@ data class KeyboardSettings(
         const val SOUND = "sound"
         const val PREVIEW = "preview"
         const val SUGGESTIONS = "suggestions"
+        const val SPELLCHECK = "spellcheck"
         const val HEIGHT = "height"
 
         fun from(values: Map<String, *>) = KeyboardSettings(
@@ -25,6 +27,7 @@ data class KeyboardSettings(
             sound = values[SOUND] as? Boolean ?: false,
             preview = values[PREVIEW] as? Boolean ?: true,
             suggestions = values[SUGGESTIONS] as? Boolean ?: true,
+            spellcheck = values[SPELLCHECK] as? Boolean ?: true,
             height = Height.entries.firstOrNull { it.name == values[HEIGHT] } ?: Height.MEDIUM,
         )
 

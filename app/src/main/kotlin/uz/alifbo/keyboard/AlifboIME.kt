@@ -33,6 +33,11 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
     private var emojiIndex = 0
 
     private val suggesters = HashMap<Page, Suggester>()
+    private val uzWords by lazy { readWords("words_uz.txt") }
+    private val spell by lazy { SpellChecker(uzWords) }
+    private val userWords by lazy { UserDictionary(this) }
+    private var checkedWord = ""
+    private var checkedCorrections: List<String>? = null
     private val prefs by lazy { getSharedPreferences(KeyboardSettings.FILE, MODE_PRIVATE) }
 
     override fun onCreate() {
@@ -184,11 +189,44 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
             c.setOnLongClickListener { convertMenu = true; updateStrip(); true }
             s.addView(c, chipParams(weighted = false))
         }
-        if (!policy.suggestions || !settings.suggestions || !onLetters) return
+        if (!policy.suggestions || !onLetters) return
         val before = currentInputConnection?.getTextBeforeCursor(48, 0) ?: return
         val word = Suggester.currentWord(before)
-        if (word.isEmpty()) return
+        if (word.isEmpty()) {
+            if (settings.spellcheck && language == Page.UZ) showCorrections(s, before)
+            return
+        }
+        if (!settings.suggestions) return
         suggester(language).suggest(word).forEach { w -> s.addView(chip(w) { pick(word, w) }, chipParams(weighted = true)) }
+    }
+
+    /**
+     * После пробела: если только что набранное узбекское слово не найдено в словаре, показывает варианты
+     * исправления и «+ lüğatga». Само слово не заменяется. Имена с заглавной в середине предложения не проверяются.
+     */
+    private fun showCorrections(s: LinearLayout, before: CharSequence) {
+        val done = Suggester.lastCompletedWord(before) ?: return
+        val word = done.word
+        if (word[0].isUpperCase() && !Suggester.startsSentence(before, done.start)) return
+        if (word != checkedWord) {
+            checkedWord = word
+            checkedCorrections = if (spell.isKnown(word, userWords.words)) null else spell.corrections(word)
+        }
+        val corrections = checkedCorrections ?: return
+        corrections.forEach { c -> s.addView(chip(c) { replaceCompleted(done, c) }, chipParams(weighted = true)) }
+        s.addView(chip(getString(R.string.add_to_dictionary)) {
+            userWords.add(word)
+            checkedWord = ""
+            updateStrip()
+        }, chipParams(weighted = corrections.isEmpty()))
+    }
+
+    private fun replaceCompleted(done: Suggester.Companion.Completed, correction: String) {
+        val ic = currentInputConnection ?: return
+        ic.beginBatchEdit()
+        ic.deleteSurroundingText(done.word.length + done.tail.length, 0)
+        ic.commitText(correction + done.tail, 1)
+        ic.endBatchEdit()
     }
 
     private fun pick(typed: String, word: String) {
@@ -223,9 +261,10 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
     }
 
     private fun suggester(lang: Page) = suggesters.getOrPut(lang) {
-        val file = if (lang == Page.RU) "words_ru.txt" else "words_uz.txt"
-        Suggester(Suggester.parse(assets.open(file).bufferedReader().use { it.readText() }))
+        Suggester(if (lang == Page.RU) readWords("words_ru.txt") else uzWords)
     }
+
+    private fun readWords(file: String) = Suggester.parse(assets.open(file).bufferedReader().use { it.readText() })
 
     private fun chip(text: String, accent: Boolean = false, onClick: () -> Unit) = TextView(this).apply {
         this.text = text

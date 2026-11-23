@@ -29,7 +29,7 @@
     <string name="try_hint">Masalan: Özbekiston, şahar, çoy</string>
     <string name="android_warning">Yoqişda Android barça begona klaviaturalar uçun «matnni yiğişi mumkin» degan ogohlantirişni körsatadi. Bu odatiy ogohlantiriş. Alifbo klaviaturasida internetga ruxsat yöq, şuning uçun heç narsa yuborilmaydi.</string>
     <string name="privacy_title">Maxfiylik</string>
-    <string name="privacy_body">• Ilovada internetga ruxsat yöq: maʼlumot heç qayerga yuborilmaydi.\n• Parol va PIN-kod maydonlarida klaviatura matnni öqimaydi va tavsiya bermaydi.\n• Yozilgan matn saqlanmaydi va jurnalga yozilmaydi.\n• «eski→yangi» tugmasi faqat siz bosganingizda işlaydi.</string>
+    <string name="privacy_body">• Ilovada internetga ruxsat yöq: maʼlumot heç qayerga yuborilmaydi.\n• Parol va PIN-kod maydonlarida klaviatura matnni öqimaydi va tavsiya bermaydi.\n• Yozilgan matn saqlanmaydi va jurnalga yozilmaydi.\n• «eski→yangi» tugmasi faqat siz bosganingizda işlaydi.\n• Şaxsiy lüğatga faqat siz «+ lüğatga» bilan qöşgan sözlar yoziladi.</string>
     <string name="footer">Alifbo: 21.10.2026 dagi O‘RQ-1184-son Qonun. Versiya %1$s</string>
 
     <string name="settings_title">Sozlamalar</string>
@@ -37,6 +37,9 @@
     <string name="setting_sound">Tugma ovozi</string>
     <string name="setting_preview">Bosilgan harfni kattalaştirib körsatiş</string>
     <string name="setting_suggestions">Söz tavsiyalari</string>
+    <string name="setting_spellcheck">Imloni tekşiriş (özbekça)</string>
+    <string name="clear_user_words">Şaxsiy lüğatni tozalaş (%1$d)</string>
+    <string name="add_to_dictionary">+ lüğatga</string>
     <string name="setting_height">Tugmalar balandligi</string>
     <string name="height_small">Past</string>
     <string name="height_medium">Örtaça</string>

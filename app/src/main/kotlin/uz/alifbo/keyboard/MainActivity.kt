@@ -36,12 +36,22 @@ class MainActivity : Activity() {
             R.id.setting_sound to (KeyboardSettings.SOUND to current.sound),
             R.id.setting_preview to (KeyboardSettings.PREVIEW to current.preview),
             R.id.setting_suggestions to (KeyboardSettings.SUGGESTIONS to current.suggestions),
+            R.id.setting_spellcheck to (KeyboardSettings.SPELLCHECK to current.spellcheck),
         ).forEach { (id, setting) ->
             val (key, value) = setting
             findViewById<Switch>(id).apply {
                 isChecked = value
                 setOnCheckedChangeListener { _, checked -> prefs.edit().putBoolean(key, checked).apply() }
             }
+        }
+        val userWords = UserDictionary(this)
+        findViewById<Button>(R.id.clear_user_words).apply {
+            fun refresh() {
+                text = getString(R.string.clear_user_words, userWords.size)
+                isEnabled = userWords.size > 0
+            }
+            refresh()
+            setOnClickListener { userWords.clear(); refresh() }
         }
         val heights = mapOf(
             R.id.height_small to KeyboardSettings.Height.SMALL,

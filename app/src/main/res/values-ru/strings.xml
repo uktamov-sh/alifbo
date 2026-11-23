@@ -18,7 +18,7 @@
     <string name="try_hint">Например: Özbekiston, şahar, çoy</string>
     <string name="android_warning">При включении Android показывает для любой сторонней клавиатуры предупреждение, что она «может собирать вводимый текст». Это стандартное предупреждение. У клавиатуры Alifbo нет доступа в интернет, поэтому отправить что-либо она не может.</string>
     <string name="privacy_title">Приватность</string>
-    <string name="privacy_body">• У приложения нет доступа в интернет: данные никуда не отправляются.\n• В полях паролей и PIN-кодов клавиатура не читает текст и ничего не подсказывает.\n• Набранный текст не сохраняется и не пишется в журнал.\n• Кнопка «eski→yangi» срабатывает только когда вы её нажимаете.</string>
+    <string name="privacy_body">• У приложения нет доступа в интернет: данные никуда не отправляются.\n• В полях паролей и PIN-кодов клавиатура не читает текст и ничего не подсказывает.\n• Набранный текст не сохраняется и не пишется в журнал.\n• Кнопка «eski→yangi» срабатывает только когда вы её нажимаете.\n• В личный словарь попадают только слова, которые вы сами добавили кнопкой «+ в словарь».</string>
     <string name="footer">Алфавит: закон O‘RQ-1184 от 21.10.2026. Версия %1$s</string>
 
     <string name="settings_title">Настройки</string>
@@ -26,6 +26,9 @@
     <string name="setting_sound">Звук нажатия</string>
     <string name="setting_preview">Показывать нажатую букву крупно</string>
     <string name="setting_suggestions">Подсказки слов</string>
+    <string name="setting_spellcheck">Проверка орфографии (узбекский)</string>
+    <string name="clear_user_words">Очистить личный словарь (%1$d)</string>
+    <string name="add_to_dictionary">+ в словарь</string>
     <string name="setting_height">Высота клавиш</string>
     <string name="height_small">Низкие</string>
     <string name="height_medium">Средние</string>

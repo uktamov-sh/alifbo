@@ -103,6 +103,18 @@
             style="@style/SettingSwitch"
             android:text="@string/setting_suggestions" />
 
+        <Switch
+            android:id="@+id/setting_spellcheck"
+            style="@style/SettingSwitch"
+            android:text="@string/setting_spellcheck" />
+
+        <Button
+            android:id="@+id/clear_user_words"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_user_words" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
