@@ -74,7 +74,18 @@ Salom!\nChoy ichamizmi? → Salom!\nÇoy içamizmi?
 эълон → eʼlon
 ЭЪЛОН → EʼLON
 компьютер → kompyuter
-съезд → sʼyezd
+# ъ в русских заимствованиях (после согласной перед е, ё, ю, я) не пишется: obyekt, syezd
+съезд → syezd
+СЪЕЗД → SYEZD
+объект → obyekt
+Субъект → Subyekt
+объём → obyom
+адъютант → adyutant
+инъекция → inyeksiya
+# после гласной ъ остаётся тутуком
+маъюс → maʼyus
+мўъжиза → möʼjiza
+қатъий → qatʼiy
 
 # --- Кириллица: е ---
 ер → yer

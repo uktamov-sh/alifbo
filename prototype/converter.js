@@ -45,6 +45,8 @@
       let latin;
       if (lo === "е") latin = (atStart || afterVowel || prev === "ъ" || prev === "ь") ? "ye" : "e";
       else if (lo === "ц") latin = afterVowel ? "ts" : "s";
+      // ъ в русских заимствованиях (после согласной перед е, ё, ю, я) не пишется: объект → obyekt.
+      else if (lo === "ъ" && prev !== null && !atStart && !afterVowel && "еёюя".includes((chars[i + 1] ?? "").toLowerCase())) latin = "";
       else latin = CYR[lo] ?? ch;
       // toUpperCase() без локали: i не станет İ.
       if (!isUpper(ch) || latin === "") return latin;

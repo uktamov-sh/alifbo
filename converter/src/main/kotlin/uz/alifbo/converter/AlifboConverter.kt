@@ -85,6 +85,9 @@ object AlifboConverter {
             val latin = when (lo) {
                 'е' -> if (atStart || afterVowel || prev == 'ъ' || prev == 'ь') "ye" else "e"
                 'ц' -> if (afterVowel) "ts" else "s"
+                // ъ в русских заимствованиях (после согласной перед е, ё, ю, я) не пишется: объект → obyekt.
+                'ъ' -> if (!atStart && !afterVowel && word.getOrNull(i + 1)?.lowercaseChar()?.let { it in "еёюя" } == true) ""
+                       else TUTUQ.toString()
                 else -> cyrMap[lo] ?: ch.toString()
             }
             // uppercase() в Kotlin не зависит от языка системы: i не станет İ даже на турецкой локали.

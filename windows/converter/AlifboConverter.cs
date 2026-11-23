@@ -117,6 +117,8 @@ namespace Alifbo
                 string latin;
                 if (lo == 'е') latin = atStart || afterVowel || prev == 'ъ' || prev == 'ь' ? "ye" : "e";
                 else if (lo == 'ц') latin = afterVowel ? "ts" : "s";
+                // ъ в русских заимствованиях (после согласной перед е, ё, ю, я) не пишется: объект → obyekt.
+                else if (lo == 'ъ' && !atStart && !afterVowel && i + 1 < word.Length && "еёюя".IndexOf(char.ToLowerInvariant(word[i + 1])) >= 0) latin = "";
                 else latin = CyrMap(lo) ?? ch.ToString();
                 // ToUpperInvariant не зависит от языка системы: i не станет İ.
                 if (!char.IsUpper(ch) || latin.Length == 0) output.Append(latin);
