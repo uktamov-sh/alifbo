@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kirilldan lotinga va yangi alifboga öğiriş — Alifbo</title>
+<meta name="description" content="Bepul konvertor: kirill, amaldagi lotin va yangi özbek alifbosi (Ö, Ğ, Ş, Ç) orasida. Matn qurilmangizdan çiqmaydi, internetsiz işlaydi.">
+<link rel="stylesheet" href="style.css">
+<script src="lang.js"></script>
+<script src="converter.js"></script>
+</head>
+<body>
+<main>
+  <div class="top">
+    <a class="brand" href="index.html">Alifbo</a>
+    <div class="langs"><button type="button" data-lang="uz">Özbekça</button><button type="button" data-lang="ru">Русский</button></div>
+  </div>
+
+  <section>
+    <h1 lang="uz">Kirill, lotin va <span class="acc">yangi alifbo</span> konvertori</h1>
+    <h1 lang="ru">Конвертер: кириллица, латиница и <span class="acc">новый алфавит</span></h1>
+    <p class="lead" lang="uz">Matnni qöying — natija yozişingiz bilan tayyor. Manba yozuv özi aniqlanadi, hatto aralaş bölsa ham. Matn sizning qurilmangizda öğiriladi va heç qayerga yuborilmaydi.</p>
+    <p class="lead" lang="ru">Вставьте текст — результат появляется по мере набора. Исходный алфавит определяется сам, даже если текст смешанный. Текст переводится на вашем устройстве и никуда не отправляется.</p>
+  </section>
+
+  <section class="tool" aria-label="Konvertor">
+    <div class="seg" role="radiogroup" aria-label="Qaysi alifboga / В какой алфавит">
+      <button type="button" role="radio" data-target="new"><span lang="uz">Yangi lotin</span><span lang="ru">Новая латиница</span></button>
+      <button type="button" role="radio" data-target="old"><span lang="uz">Lotin (amaldagi)</span><span lang="ru">Латиница (нынешняя)</span></button>
+      <button type="button" role="radio" data-target="cyr"><span lang="uz">Kirill</span><span lang="ru">Кириллица</span></button>
+    </div>
+
+    <div class="panes">
+      <div class="pane">
+        <div class="pane-head">
+          <label for="src"><span lang="uz">Matn</span><span lang="ru">Текст</span></label>
+          <span class="detected" id="detected" aria-live="polite"></span>
+        </div>
+        <textarea id="src" spellcheck="false" autocomplete="off" placeholder="Matnni şu yerga yozing yoki qöying… / Вставьте или напишите текст…"></textarea>
+        <div class="pane-actions">
+          <button type="button" class="ghost" id="paste"><span lang="uz">Qöyiş</span><span lang="ru">Вставить</span></button>
+          <button type="button" class="ghost" id="sample"><span lang="uz">Namuna</span><span lang="ru">Пример</span></button>
+          <button type="button" class="ghost" id="clear"><span lang="uz">Tozalaş</span><span lang="ru">Очистить</span></button>
+          <span class="count" id="count">0</span>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-head">
+          <label for="out"><span lang="uz">Natija</span><span lang="ru">Результат</span></label>
+        </div>
+        <textarea id="out" readonly spellcheck="false"></textarea>
+        <div class="pane-actions">
+          <button type="button" class="btn" id="copy"><span lang="uz">Nusxalaş</span><span lang="ru">Копировать</span></button>
+          <button type="button" class="ghost" id="download"><span lang="uz">.txt yuklab oliş</span><span lang="ru">Скачать .txt</span></button>
+          <button type="button" class="ghost" id="swap"><span lang="uz">Natijani manbaga</span><span lang="ru">Результат в исходный</span></button>
+        </div>
+      </div>
+    </div>
+    <p class="note" lang="uz">Hajm çegarasi yöq. Ruscha qarz sözlar (sentyabr → сентябрь, sirk → цирк) lüğat bilan, qolgani imlo qoidalari bilan öğiriladi. Xato topsangiz, <a href="https://github.com/uktamov-sh/alifbo/issues">bizga yozing</a>.</p>
+    <p class="note" lang="ru">Ограничения по объёму нет. Русские заимствования (sentyabr → сентябрь, sirk → цирк) переводятся по словарю, остальное — по правилам орфографии. Нашли ошибку — <a href="https://github.com/uktamov-sh/alifbo/issues">напишите нам</a>.</p>
+  </section>
+
+  <section id="yangi-alifbo">
+    <h2 lang="uz">Yangi alifboda nima özgardi?</h2>
+    <h2 lang="ru">Что изменилось в новом алфавите?</h2>
+    <p lang="uz">Yangi alifbo 28 harf va 1 tutuq belgisidan iborat. Törtta harf özgardi, qolgan harflar va imlo qoidalari saqlanadi.</p>
+    <p lang="ru">Новый алфавит — 28 букв и знак тутук. Изменились четыре буквы, остальные буквы и правила орфографии сохраняются.</p>
+    <div class="changes">
+      <div class="change"><div class="pair"><span class="was">Oʻ oʻ</span><span class="arrow">→</span><span class="now">Ö ö</span></div><div class="cyr">Ў ў</div><div class="ex">oʻzbek → özbek</div></div>
+      <div class="change"><div class="pair"><span class="was">Gʻ gʻ</span><span class="arrow">→</span><span class="now">Ğ ğ</span></div><div class="cyr">Ғ ғ</div><div class="ex">togʻ → toğ</div></div>
+      <div class="change"><div class="pair"><span class="was">Sh sh</span><span class="arrow">→</span><span class="now">Ş ş</span></div><div class="cyr">Ш ш</div><div class="ex">shahar → şahar</div></div>
+      <div class="change"><div class="pair"><span class="was">Ch ch</span><span class="arrow">→</span><span class="now">Ç ç</span></div><div class="cyr">Ч ч</div><div class="ex">choy → çoy</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 lang="uz">Köp beriladigan savollar</h2>
+    <h2 lang="ru">Частые вопросы</h2>
+    <div class="faq" lang="uz">
+      <details><summary>Yangi alifbo qaçon kuçga kiradi?</summary><p>21.10.2026 dagi O‘RQ-1184-son Qonun 2027-yil 22-apreldan kuçga kiradi. Ötiş bosqiçma-bosqiç böladi.</p></details>
+      <details><summary>Amaldagi lotin alifbosidagi hujjatlar bekor böladimi?</summary><p>Yöq. Amaldagi lotin alifbosida rasmiylaştirilgan hujjatlar kuçda qoladi.</p></details>
+      <details><summary>Matnim saqlanadimi yoki biror joyga yuboriladimi?</summary><p>Yöq. Konvertor şu sahifaning özida, brauzeringizda işlaydi. Sahifa yuklangandan keyin internetni özirsangiz ham işlayveradi.</p></details>
+      <details><summary>Matnda kirill va lotin aralaş bölsa-çi?</summary><p>Har bir söz alohida öğiriladi: kirill söz kirill qoidalari bilan, lotin söz lotin qoidalari bilan.</p></details>
+      <details><summary>Telefonda ham yangi alifboda yoziş mumkinmi?</summary><p>Ha. <a href="index.html">Alifbo klaviaturasida</a> Ş, Ç, Ö va Ğ asosiy qatorlarda turadi, «eski→yangi» tugmasi esa yozilgan matnni bir bosişda öğiradi.</p></details>
+    </div>
+    <div class="faq" lang="ru">
+      <details><summary>Когда новый алфавит вступает в силу?</summary><p>Закон O‘RQ-1184 от 21.10.2026 вступает в силу 22 апреля 2027 года. Переход будет поэтапным.</p></details>
+      <details><summary>Документы на нынешней латинице станут недействительными?</summary><p>Нет. Документы, оформленные нынешней латиницей, остаются в силе.</p></details>
+      <details><summary>Мой текст сохраняется или куда-то отправляется?</summary><p>Нет. Конвертер работает прямо на этой странице, в вашем браузере. После загрузки страницы он работает даже без интернета.</p></details>
+      <details><summary>Что, если в тексте смешаны кириллица и латиница?</summary><p>Каждое слово переводится отдельно: кириллическое по правилам кириллицы, латинское по правилам латиницы.</p></details>
+      <details><summary>Можно ли писать новым алфавитом на телефоне?</summary><p>Да. В <a href="index.html">клавиатуре Alifbo</a> Ş, Ç, Ö и Ğ стоят на основных рядах, а кнопка «eski→yangi» переводит набранный текст одним нажатием.</p></details>
+    </div>
+  </section>
+
+  <footer>
+    <span lang="uz">Oçiq kod, GPL-3.0. <a href="index.html">Alifbo klaviaturasi</a> · <a href="privacy.html">Maxfiylik siyosati</a></span>
+    <span lang="ru">Открытый код, GPL-3.0. <a href="index.html">Клавиатура Alifbo</a> · <a href="privacy.html">Политика конфиденциальности</a></span>
+    <span>Bu sayt cookie va statistika işlatmaydi. / Сайт не использует cookie и аналитику.</span>
+  </footer>
+</main>
+<script>
+(function () {
+  var C = window.AlifboConverter;
+  var convert = { new: C.toNewLatin, old: C.toOldLatin, cyr: C.toCyrillic };
+  var SAMPLE = "Oʻzbekiston Respublikasi — Toshkent shahri. Ўзбекистон Республикаси пойтахти Тошкент шаҳри. Choy, togʻ, maʼno, sentyabr.";
+  var src = document.getElementById("src"), out = document.getElementById("out");
+  var detected = document.getElementById("detected"), count = document.getElementById("count");
+  var target = "new";
+  try { target = localStorage.getItem("alifbo-target") || "new"; } catch (e) {}
+  if (!convert[target]) target = "new";
+
+  function t(uz, ru) { return document.documentElement.lang === "ru" ? ru : uz; }
+
+  // Какие алфавиты есть в тексте: кириллица, новая латиница (Ö Ğ Ş Ç), нынешняя (oʻ gʻ sh ch).
+  function detect(text) {
+    var kinds = [];
+    if (/[а-яёўқғҳ]/i.test(text)) kinds.push(t("kirill", "кириллица"));
+    if (/[ÖöĞğŞşÇç]/.test(text)) kinds.push(t("yangi lotin", "новая латиница"));
+    if (/[OoGg]['‘’ʻʼ`]|\b\w*(sh|ch)/i.test(text) && !/[ŞşÇç]/.test(text)) kinds.push(t("amaldagi lotin", "нынешняя латиница"));
+    else if (!kinds.length && /[a-z]/i.test(text)) kinds.push(t("lotin", "латиница"));
+    return kinds.length ? t("Aniqlandi: ", "Определено: ") + kinds.join(" + ") : "";
+  }
+
+  function run() {
+    out.value = convert[target](src.value);
+    detected.textContent = detect(src.value);
+    count.textContent = src.value.length.toLocaleString("ru-RU");
+  }
+
+  function setTarget(v) {
+    target = v;
+    document.querySelectorAll(".seg button").forEach(function (b) {
+      b.setAttribute("aria-checked", String(b.dataset.target === v));
+    });
+    try { localStorage.setItem("alifbo-target", v); } catch (e) {}
+    run();
+  }
+
+  function flash(btn, uz, ru) {
+    var keep = btn.innerHTML;
+    btn.textContent = t(uz, ru);
+    setTimeout(function () { btn.innerHTML = keep; }, 1200);
+  }
+
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () { setTarget(b.dataset.target); });
+  });
+  src.addEventListener("input", run);
+  document.getElementById("sample").addEventListener("click", function () { src.value = SAMPLE; run(); src.focus(); });
+  document.getElementById("clear").addEventListener("click", function () { src.value = ""; run(); src.focus(); });
+  document.getElementById("paste").addEventListener("click", function () {
+    if (!navigator.clipboard || !navigator.clipboard.readText) { src.focus(); return; }
+    navigator.clipboard.readText().then(function (s) { src.value = s; run(); }, function () { src.focus(); });
+  });
+  document.getElementById("copy").addEventListener("click", function (e) {
+    var btn = e.currentTarget;
+    var done = function () { flash(btn, "Nusxalandi", "Скопировано"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(out.value).then(done, function () { out.select(); document.execCommand("copy"); done(); });
+    else { out.select(); document.execCommand("copy"); done(); }
+  });
+  document.getElementById("download").addEventListener("click", function () {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([out.value], { type: "text/plain;charset=utf-8" }));
+    a.download = "alifbo-" + target + ".txt";
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+  document.getElementById("swap").addEventListener("click", function () { src.value = out.value; run(); src.focus(); });
+  // lang.js меняет язык в своём обработчике, поэтому подписи обновляем после него.
+  document.querySelectorAll(".langs button").forEach(function (b) { b.addEventListener("click", function () { setTimeout(run, 0); }); });
+
+  setTarget(target);
+})();
+</script>
+</body>
+</html>
