@@ -16,6 +16,10 @@ name: Долгое нажатие на eski→yangi — перевод на ки
 - longPressOn: "eski→yangi"
 - tapOn: "→ lotin (eski)"
 - assertVisible: "Choy"
+# «Только апострофы» не меняет алфавит: Choy остаётся Choy.
+- longPressOn: "eski→yangi"
+- tapOn: "oʻ ʼ"
+- assertVisible: "Choy"
 - longPressOn: "eski→yangi"
 - tapOn: "✕"
 - assertVisible: "eski→yangi"

@@ -50,6 +50,14 @@ class AlifboConverterTest {
             }
         }
 
+    @TestFactory
+    fun `эталоны исправления апострофов`(): List<DynamicTest> =
+        loadCases("cases-apostrophes.txt").map { c ->
+            DynamicTest.dynamicTest("стр. ${c.line}: ${c.input}") {
+                assertEquals(c.expected, AlifboConverter.fixApostrophes(c.input))
+            }
+        }
+
     // Слово вроде «Ishoq» без Ş/Ç не отличить от старой латиницы, такие результаты пропускаем.
     @Test
     fun `повторная конвертация ничего не меняет`() {

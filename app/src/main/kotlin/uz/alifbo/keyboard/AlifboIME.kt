@@ -175,6 +175,7 @@ class AlifboIME : InputMethodService(), KeyboardView.Listener {
             s.addView(chip(getString(R.string.convert_to_new), accent = true) { convertField(::toNewFromKey) }, chipParams(weighted = true))
             s.addView(chip(getString(R.string.convert_to_old)) { convertField(AlifboConverter::toOldLatin) }, chipParams(weighted = true))
             s.addView(chip(getString(R.string.convert_to_cyrillic)) { convertField(AlifboConverter::toCyrillic) }, chipParams(weighted = true))
+            s.addView(chip(getString(R.string.fix_apostrophes)) { convertField(AlifboConverter::fixApostrophes) }, chipParams(weighted = true))
             s.addView(chip("✕") { convertMenu = false; updateStrip() }, chipParams(weighted = false))
             return
         }

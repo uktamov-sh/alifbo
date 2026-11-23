@@ -1,10 +1,10 @@
 // Проверяет конвертер прототипа на тех же эталонах, что и Kotlin-версию.
 const fs = require("fs");
 const path = require("path");
-const { toNewLatin, toOldLatin, toCyrillic } = require("./converter.js");
+const { toNewLatin, toOldLatin, toCyrillic, fixApostrophes } = require("./converter.js");
 
 let total = 0, failed = 0;
-[["cases.txt", toNewLatin], ["cases-old-latin.txt", toOldLatin], ["cases-cyrillic.txt", toCyrillic]].forEach(([file, convert]) => {
+[["cases.txt", toNewLatin], ["cases-old-latin.txt", toOldLatin], ["cases-cyrillic.txt", toCyrillic], ["cases-apostrophes.txt", fixApostrophes]].forEach(([file, convert]) => {
   const lines = fs.readFileSync(path.join(__dirname, "..", "spec", file), "utf8").split(/\r?\n/);
   lines.forEach((raw, i) => {
     const line = raw.trim();

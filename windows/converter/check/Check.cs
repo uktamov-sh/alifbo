@@ -15,6 +15,7 @@ class Check
             (Path.GetFileName(path), s => AlifboConverter.ToNewLatin(s)),
             ("cases-old-latin.txt", AlifboConverter.ToOldLatin),
             ("cases-cyrillic.txt", AlifboConverter.ToCyrillic),
+            ("cases-apostrophes.txt", AlifboConverter.FixApostrophes),
         };
         foreach (var (name, convert) in files)
         {

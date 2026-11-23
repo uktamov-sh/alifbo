@@ -42,6 +42,10 @@ yangi → yangi
 
 # --- Кавычки, адреса и уже новый текст не трогаются ---
 Bu 'radio' edi → Bu 'radio' edi
+# Апостроф после o/g в конце слова — часть буквы, если слово не начинается с кавычки
+tog' va bog' → toğ va boğ
+tog', bog'. → toğ, boğ.
+"bog'" → "boğ"
 'salom' → 'salom'
 https://shop.uz/choy → https://shop.uz/choy
 www.shahar.uz → www.shahar.uz

@@ -28,6 +28,7 @@
       <button type="button" role="radio" data-target="new"><span lang="uz">Yangi lotin</span><span lang="ru">Новая латиница</span></button>
       <button type="button" role="radio" data-target="old"><span lang="uz">Lotin (amaldagi)</span><span lang="ru">Латиница (нынешняя)</span></button>
       <button type="button" role="radio" data-target="cyr"><span lang="uz">Kirill</span><span lang="ru">Кириллица</span></button>
+      <button type="button" role="radio" data-target="ap" title="oʻ gʻ maʼno"><span lang="uz">Faqat apostroflar</span><span lang="ru">Только апострофы</span></button>
     </div>
 
     <div class="panes">
@@ -56,8 +57,8 @@
         </div>
       </div>
     </div>
-    <p class="note" lang="uz">Hajm çegarasi yöq. Ruscha qarz sözlar (sentyabr → сентябрь, sirk → цирк) lüğat bilan, qolgani imlo qoidalari bilan öğiriladi. Xato topsangiz, <a href="https://github.com/uktamov-sh/alifbo/issues">bizga yozing</a>.</p>
-    <p class="note" lang="ru">Ограничения по объёму нет. Русские заимствования (sentyabr → сентябрь, sirk → цирк) переводятся по словарю, остальное — по правилам орфографии. Нашли ошибку — <a href="https://github.com/uktamov-sh/alifbo/issues">напишите нам</a>.</p>
+    <p class="note" lang="uz">Hajm çegarasi yöq. Ruscha qarz sözlar (sentyabr → сентябрь, sirk → цирк) lüğat bilan, qolgani imlo qoidalari bilan öğiriladi. «Faqat apostroflar» alifboni özgartirmaydi: o', g', ma'no dagi har xil belgilarni toğri ʻ va ʼ ga almaştiradi. Xato topsangiz, <a href="https://github.com/uktamov-sh/alifbo/issues">bizga yozing</a>.</p>
+    <p class="note" lang="ru">Ограничения по объёму нет. Русские заимствования (sentyabr → сентябрь, sirk → цирк) переводятся по словарю, остальное — по правилам орфографии. «Только апострофы» не меняет алфавит: разные значки в o', g', ma'no заменяются на правильные ʻ и ʼ. Нашли ошибку — <a href="https://github.com/uktamov-sh/alifbo/issues">напишите нам</a>.</p>
   </section>
 
   <section id="yangi-alifbo">
@@ -101,7 +102,7 @@
 <script>
 (function () {
   var C = window.AlifboConverter;
-  var convert = { new: C.toNewLatin, old: C.toOldLatin, cyr: C.toCyrillic };
+  var convert = { new: C.toNewLatin, old: C.toOldLatin, cyr: C.toCyrillic, ap: C.fixApostrophes };
   var SAMPLE = "Oʻzbekiston Respublikasi — Toshkent shahri. Ўзбекистон Республикаси пойтахти Тошкент шаҳри. Choy, togʻ, maʼno, sentyabr.";
   var src = document.getElementById("src"), out = document.getElementById("out");
   var detected = document.getElementById("detected"), count = document.getElementById("count");

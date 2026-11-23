@@ -23,8 +23,15 @@
   const isUpper = c => c !== c.toLowerCase();
   const isLower = c => c !== c.toUpperCase();
 
+  // o'/g' в конце слова (tog', bog') — тоже буква, если слово не начинается с кавычки ('radio').
+  const trailingOG = new RegExp(`([OoGg])[${AP}]$`, "u");
+  function ogLetters(word, toLetter) {
+    const w = word.replace(oldOG, (m, l) => toLetter(l));
+    return AP.includes(word[0]) ? w : w.replace(trailingOG, (m, l) => toLetter(l));
+  }
+
   function oldLatinWord(word, keepShCh) {
-    let w = word.replace(oldOG, (m, l) => OG[l]);
+    let w = ogLetters(word, l => OG[l]);
     if (!keepShCh) {
       w = w.replace(separateSH, (m, l) => l + SEPARATE);
       w = w.replace(digraph, m => SC[m[0]]);
@@ -169,7 +176,23 @@
     return convertWords(text, cyrillicOf);
   }
 
-  const api = { toNewLatin, toOldLatin, toCyrillic, TUTUQ };
+  // --- Исправление апострофов: алфавит не меняется ---
+  // После o и g — ʻ (U+02BB), между буквами — тутук ʼ (U+02BC). Эталоны: spec/cases-apostrophes.txt.
+  const OKINA = "ʻ";
+  const MARK = "\u0001";
+  const innerApAfterMark = new RegExp(`(?<=[\\p{L}${MARK}])[${AP}](?=\\p{L})`, "gu");
+
+  function fixApostrophes(text) {
+    return text.replace(chunkRe, s => {
+      if (/^\s+$/u.test(s) || isAddress(s)) return s;
+      return s.replace(wordRe, w => {
+        if (cyrLetter.test(w)) return w;
+        return ogLetters(w, l => l + MARK).replace(innerApAfterMark, TUTUQ).split(MARK).join(OKINA);
+      });
+    });
+  }
+
+  const api = { toNewLatin, toOldLatin, toCyrillic, fixApostrophes, TUTUQ };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.AlifboConverter = api;
 })(this);

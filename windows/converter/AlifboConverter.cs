@@ -64,11 +64,20 @@ namespace Alifbo
             s.StartsWith("www.", System.StringComparison.OrdinalIgnoreCase) ||
             Email.IsMatch(s);
 
+        // o'/g' в конце слова (tog', bog') — тоже буква, если слово не начинается с кавычки ('radio').
+        private static readonly Regex TrailingOG = new Regex("([OoGg])[" + Ap + "]$");
+
+        private static string OgLetters(string word, System.Func<string, string> toLetter)
+        {
+            string w = OldOG.Replace(word, m => toLetter(m.Groups[1].Value));
+            return word.Length > 0 && Ap.IndexOf(word[0]) >= 0 ? w : TrailingOG.Replace(w, m => toLetter(m.Groups[1].Value));
+        }
+
         private static string OldLatinWord(string word, bool keepShCh)
         {
-            string w = OldOG.Replace(word, m =>
+            string w = OgLetters(word, l =>
             {
-                switch (m.Groups[1].Value)
+                switch (l)
                 {
                     case "O": return "Ö";
                     case "o": return "ö";
@@ -296,5 +305,24 @@ namespace Alifbo
 
         /// <summary>Переписывает латинский текст (новый или нынешний алфавит) на кириллицу. Кириллица остаётся как есть.</summary>
         public static string ToCyrillic(string text) => ConvertWords(text, CyrillicOf);
+
+        // --- Исправление апострофов: алфавит не меняется ---
+        // После o и g — ʻ (U+02BB), между буквами — тутук ʼ (U+02BC). Эталоны: spec/cases-apostrophes.txt.
+        private const string Okina = "ʻ";
+        private const string Mark = "\u0001";
+        private static readonly Regex InnerApAfterMark = new Regex("(?<=[\\p{L}" + Mark + "])[" + Ap + "](?=\\p{L})");
+
+        /// <summary>Ставит правильные знаки: oʻ, gʻ и тутук ʼ. Буквы и алфавит не меняются, кириллица и кавычки не трогаются.</summary>
+        public static string FixApostrophes(string text) => Chunk.Replace(text, chunk =>
+        {
+            string s = chunk.Value;
+            if (string.IsNullOrWhiteSpace(s) || IsAddress(s)) return s;
+            return Word.Replace(s, m =>
+            {
+                string w = m.Value;
+                if (CyrillicLetter.IsMatch(w)) return w;
+                return InnerApAfterMark.Replace(OgLetters(w, l => l + Mark), Tutuq.ToString()).Replace(Mark, Okina);
+            });
+        });
     }
 }

@@ -55,9 +55,18 @@ object AlifboConverter {
     private fun isAddress(s: String) =
         "://" in s || s.startsWith("www.", ignoreCase = true) || emailRegex.matches(s)
 
+    /** o'/g' в конце слова (tog', bog') — тоже буква, если слово не начинается с кавычки ('radio'). */
+    private val trailingOG = Regex("""([OoGg])[$APOSTROPHES]$""")
+
+    private inline fun ogLetters(word: String, crossinline toLetter: (String) -> String): String {
+        val w = oldOG.replace(word) { m -> toLetter(m.groupValues[1]) }
+        return if (word.isNotEmpty() && word[0] in APOSTROPHES) w
+        else trailingOG.replace(w) { m -> toLetter(m.groupValues[1]) }
+    }
+
     private fun oldLatinWord(word: String, keepShCh: Boolean): String {
-        var w = oldOG.replace(word) { m ->
-            when (m.groupValues[1]) {
+        var w = ogLetters(word) { l ->
+            when (l) {
                 "O" -> "Ö"; "o" -> "ö"; "G" -> "Ğ"; else -> "ğ"
             }
         }
@@ -222,4 +231,21 @@ object AlifboConverter {
 
     /** Переписывает латинский текст (новый или нынешний алфавит) на кириллицу. Кириллица остаётся как есть. */
     fun toCyrillic(text: String): String = convertWords(text, ::cyrillicOf)
+
+    // --- Исправление апострофов: алфавит не меняется ---
+    // После o и g — ʻ (U+02BB), между буквами — тутук ʼ (U+02BC). Эталоны: spec/cases-apostrophes.txt.
+    private const val OKINA = "ʻ"
+    private const val MARK = "\u0001"
+    private val innerApAfterMark = Regex("""(?<=[\p{L}$MARK])[$APOSTROPHES](?=\p{L})""")
+
+    /** Ставит правильные знаки: oʻ, gʻ и тутук ʼ. Буквы и алфавит не меняются, кириллица и кавычки не трогаются. */
+    fun fixApostrophes(text: String): String = chunkRegex.replace(text) { chunk ->
+        val s = chunk.value
+        if (s.isBlank() || isAddress(s)) s
+        else wordRegex.replace(s) { m ->
+            val w = m.value
+            if (cyrillicLetter.containsMatchIn(w)) w
+            else innerApAfterMark.replace(ogLetters(w) { it + MARK }, TUTUQ.toString()).replace(MARK, OKINA)
+        }
+    }
 }

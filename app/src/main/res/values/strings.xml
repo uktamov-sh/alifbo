@@ -14,6 +14,7 @@
     <string name="convert_to_new" translatable="false">→ yangi</string>
     <string name="convert_to_old" translatable="false">→ lotin (eski)</string>
     <string name="convert_to_cyrillic" translatable="false">→ кирилл</string>
+    <string name="fix_apostrophes" translatable="false">oʻ ʼ</string>
 
     <string name="main_title">Yangi özbek alifbosi klaviaturasi</string>
     <string name="main_intro">Ş, Ç, Ö va Ğ harflari asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni saqlamaydi.</string>

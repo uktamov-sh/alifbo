@@ -1,0 +1,21 @@
+# Эталоны исправления апострофов (fixApostrophes): алфавит не меняется, только знаки.
+# После o и g — ʻ (U+02BB), между буквами — тутук ʼ (U+02BC). Кавычки и кириллица не трогаются.
+
+o'zbek → oʻzbek
+O'ZBEKISTON → OʻZBEKISTON
+O‘zbekiston → Oʻzbekiston
+O’zbekiston → Oʻzbekiston
+g`alaba → gʻalaba
+oʻgʻil → oʻgʻil
+tog' va bog' → togʻ va bogʻ
+tog', bog'. → togʻ, bogʻ.
+ma'no, san'at → maʼno, sanʼat
+ma’no → maʼno
+taʻlim → taʼlim
+mo''jiza → moʻʼjiza
+Is'hoq → Isʼhoq
+Bu 'radio' edi → Bu 'radio' edi
+shahar, choy → shahar, choy
+Özbekiston maʼno → Özbekiston maʼno
+Ўзбекистон → Ўзбекистон
+https://o'z.uz → https://o'z.uz

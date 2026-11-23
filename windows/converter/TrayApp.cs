@@ -48,6 +48,7 @@ namespace Alifbo
         public static string TargetNew => Ru ? "на новый алфавит (Ö, Ş)" : "yangi alifboga (Ö, Ş)";
         public static string TargetOld => Ru ? "на нынешнюю латиницу (Oʻ, Sh)" : "amaldagi lotinga (Oʻ, Sh)";
         public static string TargetCyr => Ru ? "на кириллицу" : "kirillga";
+        public static string TargetApostrophes => Ru ? "только исправить апострофы (oʻ, ʼ)" : "faqat apostroflarni tuzatiş (oʻ, ʼ)";
         public static string MenuAbout => Ru ? "О программе" : "Dastur haqida";
         public static string MenuExit => Ru ? "Выход" : "Çiqiş";
     }
@@ -73,12 +74,14 @@ namespace Alifbo
                 new ToolStripMenuItem(Texts.TargetNew) { Checked = true },
                 new ToolStripMenuItem(Texts.TargetOld),
                 new ToolStripMenuItem(Texts.TargetCyr),
+                new ToolStripMenuItem(Texts.TargetApostrophes),
             };
             Func<string, string>[] converters =
             {
                 s => AlifboConverter.ToNewLatin(s, assumeOldLatin: true),
                 AlifboConverter.ToOldLatin,
                 AlifboConverter.ToCyrillic,
+                AlifboConverter.FixApostrophes,
             };
             for (int i = 0; i < targets.Length; i++)
             {
