@@ -29,10 +29,13 @@ try {
     $shell.SendKeys('Choy shahar'); Start-Sleep 1
 
     $root = [System.Windows.Automation.AutomationElement]::FromHandle($first.MainWindowHandle)
-    $editType = New-Object System.Windows.Automation.PropertyCondition(
-        [System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Edit)
-    $edits = $root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $editType)
-    $values = @($edits | ForEach-Object { $_.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value.Trim() })
+    # Многострочные поля WinForms UI Automation отдаёт как Edit или Document: берём всё, у чего есть значение.
+    $hasValue = New-Object System.Windows.Automation.PropertyCondition(
+        [System.Windows.Automation.AutomationElement]::IsValuePatternAvailableProperty, $true)
+    $values = @()
+    foreach ($el in $root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $hasValue)) {
+        $values += $el.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value.Trim()
+    }
     Write-Host "Поля окна: [$($values -join '] [')]"
     if ($values -notcontains 'Choy shahar') { throw 'Текст не попал в поле ввода' }
     if ($values -notcontains $expected) { throw "Ожидался результат [$expected]" }
