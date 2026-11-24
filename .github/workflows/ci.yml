@@ -112,6 +112,14 @@ jobs:
       - name: Окно конвертера и одна копия программы
         run: windows\installer\test-window.ps1
 
+      - name: Снимок окна конвертера
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: window-screenshot
+          path: windows/build/window.png
+          if-no-files-found: ignore
+
       - name: Удаление через «Приложения»
         run: |
           Start-Process "$env:ProgramFiles\Alifbo\unins000.exe" -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait

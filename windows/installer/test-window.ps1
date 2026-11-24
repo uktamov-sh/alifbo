@@ -27,6 +27,22 @@ try {
     Start-Sleep 1
     $shell.SendKeys('Choy shahar'); Start-Sleep 1
 
+    # Снимок окна для просмотра вёрстки (артефакт window-screenshot в CI).
+    Add-Type -AssemblyName System.Drawing
+    Add-Type @"
+using System; using System.Runtime.InteropServices;
+public static class Win { [StructLayout(LayoutKind.Sequential)] public struct R { public int L, T, Ri, B; }
+  [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out R r); }
+"@
+    $r = New-Object Win+R
+    $null = [Win]::GetWindowRect($first.MainWindowHandle, [ref]$r)
+    $bmp = New-Object System.Drawing.Bitmap ($r.Ri - $r.L), ($r.B - $r.T)
+    $g = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.CopyFromScreen($r.L, $r.T, 0, 0, $bmp.Size)
+    $null = New-Item -ItemType Directory -Force 'windows\build'
+    $bmp.Save((Join-Path (Get-Location) 'windows\build\window.png'))
+    $g.Dispose(); $bmp.Dispose()
+
     # Ctrl+Enter в окне копирует результат: читаем его из буфера обмена.
     Set-Clipboard -Value 'pusto'
     $shell.SendKeys('^{ENTER}'); Start-Sleep 1
