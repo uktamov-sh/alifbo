@@ -11,13 +11,14 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <Version>0.2.0</Version>
     <Product>Alifbo</Product>
-    <Description>Alifbo: eski matnni yangi özbek alifbosiga öğiriş (Ctrl+Shift+Y)</Description>
+    <Description>Alifbo: kirill, lotin va yangi özbek alifbosi konvertori</Description>
     <Copyright>GPL-3.0, https://github.com/uktamov-sh/alifbo</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="AlifboConverter.cs" />
     <Compile Include="TrayApp.cs" />
+    <Compile Include="ConverterWindow.cs" />
   </ItemGroup>
 
   <ItemGroup>

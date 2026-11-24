@@ -109,6 +109,9 @@ jobs:
       - name: Горячая клавиша Ctrl+Shift+Y в Блокноте
         run: windows\installer\test-hotkey.ps1
 
+      - name: Окно конвертера и одна копия программы
+        run: windows\installer\test-window.ps1
+
       - name: Удаление через «Приложения»
         run: |
           Start-Process "$env:ProgramFiles\Alifbo\unins000.exe" -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait

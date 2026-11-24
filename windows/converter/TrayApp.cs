@@ -1,4 +1,5 @@
-// Alifbo: значок в трее. Выделите текст в любой программе и нажмите Ctrl+Shift+Y —
+// Alifbo: значок в трее и окно конвертера (щелчок по значку или ярлык в «Пуске»).
+// Выделите текст в любой программе и нажмите Ctrl+Shift+Y —
 // он перепишется на новый алфавит. В меню значка можно выбрать другое направление:
 // нынешняя латиница или кириллица (выбор не сохраняется, при запуске снова новый алфавит).
 //
@@ -17,14 +18,23 @@ namespace Alifbo
     internal static class Program
     {
         [STAThread]
-        private static void Main()
+        public const string ShowEventName = "Alifbo.Converter.Show";
+
+        // --tray: запуск вместе с Windows, только значок в трее. Без него открывается окно конвертера.
+        private static void Main(string[] args)
         {
+            bool trayOnly = Array.Exists(args, a => a == "--tray");
             using (var mutex = new Mutex(true, "Alifbo.Converter.SingleInstance", out bool created))
             {
-                if (!created) return;
+                if (!created)
+                {
+                    // Программа уже работает: просим её показать окно и выходим.
+                    if (!trayOnly && EventWaitHandle.TryOpenExisting(ShowEventName, out var show)) using (show) show.Set();
+                    return;
+                }
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new TrayContext());
+                Application.Run(new TrayContext(showWindow: !trayOnly));
             }
         }
     }
@@ -49,6 +59,26 @@ namespace Alifbo
         public static string TargetOld => Ru ? "на нынешнюю латиницу (Oʻ, Sh)" : "amaldagi lotinga (Oʻ, Sh)";
         public static string TargetCyr => Ru ? "на кириллицу" : "kirillga";
         public static string TargetApostrophes => Ru ? "только исправить апострофы (oʻ, ʼ)" : "faqat apostroflarni tuzatiş (oʻ, ʼ)";
+        public static string MenuOpen => Ru ? "Открыть конвертер" : "Konvertorni oçiş";
+        public static string WindowTitle => Ru ? "Alifbo — конвертер" : "Alifbo — konvertor";
+        public static string TabNew => Ru ? "Новая латиница" : "Yangi lotin";
+        public static string TabOld => Ru ? "Латиница (нынешняя)" : "Lotin (amaldagi)";
+        public static string TabCyr => Ru ? "Кириллица" : "Kirill";
+        public static string TabApostrophes => Ru ? "Только апострофы" : "Faqat apostroflar";
+        public static string SourceLabel => Ru ? "Текст" : "Matn";
+        public static string ResultLabel => Ru ? "Результат" : "Natija";
+        public static string Paste => Ru ? "Вставить" : "Qöyiş";
+        public static string SampleText => Ru ? "Пример" : "Namuna";
+        public static string Clear => Ru ? "Очистить" : "Tozalaş";
+        public static string Copy => Ru ? "Копировать" : "Nusxalaş";
+        public static string Copied => Ru ? "Скопировано" : "Nusxalandi";
+        public static string SaveTxt => Ru ? "Сохранить .txt" : ".txt saqlaş";
+        public static string Swap => Ru ? "Результат в исходный" : "Natijani manbaga";
+        public static string Detected => Ru ? "Определено: " : "Aniqlandi: ";
+        public static string Cyrillic => Ru ? "кириллица" : "kirill";
+        public static string NewLatin => Ru ? "новая латиница" : "yangi lotin";
+        public static string OldLatin => Ru ? "нынешняя латиница" : "amaldagi lotin";
+        public static string Latin => Ru ? "латиница" : "lotin";
         public static string MenuAbout => Ru ? "О программе" : "Dastur haqida";
         public static string MenuExit => Ru ? "Выход" : "Çiqiş";
     }
@@ -61,11 +91,25 @@ namespace Alifbo
         private string savedClipboard;
         private bool busy;
         private Func<string, string> convert = s => AlifboConverter.ToNewLatin(s, assumeOldLatin: true);
+        private readonly Control invoker = new Control();
+        private readonly EventWaitHandle showEvent;
+        private readonly RegisteredWaitHandle showWait;
+        private ConverterWindow window;
 
-        public TrayContext()
+        public TrayContext(bool showWindow)
         {
             hotkey = new HotkeyWindow(ConvertSelection);
+            invoker.CreateControl();
+            IntPtr unused = invoker.Handle;
+            // Второй запуск (ярлык в «Пуске») не открывает новую копию, а будит эту.
+            showEvent = new EventWaitHandle(false, EventResetMode.AutoReset, Program.ShowEventName);
+            showWait = ThreadPool.RegisterWaitForSingleObject(showEvent,
+                (state, timedOut) => invoker.BeginInvoke((Action)ShowWindow), null, Timeout.Infinite, false);
             var menu = new ContextMenuStrip();
+            var open = new ToolStripMenuItem(Texts.MenuOpen, null, (s, e) => ShowWindow());
+            open.Font = new Font(open.Font, FontStyle.Bold);
+            menu.Items.Add(open);
+            menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(new ToolStripMenuItem(Texts.MenuHint) { Enabled = false });
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(new ToolStripMenuItem(Texts.MenuTarget) { Enabled = false });
@@ -97,7 +141,9 @@ namespace Alifbo
             menu.Items.Add(Texts.MenuAbout, null, (s, e) => Process.Start("https://github.com/uktamov-sh/alifbo"));
             menu.Items.Add(Texts.MenuExit, null, (s, e) => ExitThread());
             icon = new NotifyIcon { Icon = MakeIcon(), Text = Texts.Tooltip, ContextMenuStrip = menu, Visible = true };
+            icon.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) ShowWindow(); };
             restoreTimer.Tick += (s, e) => RestoreClipboard();
+            if (showWindow) ShowWindow();
             if (hotkey.Registered) icon.ShowBalloonTip(4000, "Alifbo", Texts.Started, ToolTipIcon.Info);
             else icon.ShowBalloonTip(6000, "Alifbo", Texts.HotkeyBusy, ToolTipIcon.Warning);
         }
@@ -188,8 +234,18 @@ namespace Alifbo
             }
         }
 
+        private void ShowWindow()
+        {
+            if (window == null || window.IsDisposed) window = new ConverterWindow(icon.Icon);
+            window.ShowOnTop();
+        }
+
         protected override void ExitThreadCore()
         {
+            showWait.Unregister(null);
+            showEvent.Dispose();
+            if (window != null && !window.IsDisposed) window.Dispose();
+            invoker.Dispose();
             RestoreClipboard();
             icon.Visible = false;
             icon.Dispose();

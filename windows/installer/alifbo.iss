@@ -56,7 +56,7 @@ Source: "..\..\LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignor
 
 [Icons]
 Name: "{autoprograms}\{cm:ConverterName}"; Filename: "{app}\AlifboConverter.exe"
-Name: "{autostartup}\{cm:ConverterName}"; Filename: "{app}\AlifboConverter.exe"; Tasks: autostart
+Name: "{autostartup}\{cm:ConverterName}"; Filename: "{app}\AlifboConverter.exe"; Parameters: "--tray"; Tasks: autostart
 
 [Run]
 Filename: "{app}\AlifboConverter.exe"; Description: "{cm:RunConverter}"; Flags: nowait postinstall skipifsilent

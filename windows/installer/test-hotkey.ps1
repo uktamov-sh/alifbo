@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $expected = "$([char]0x00C7)oy $([char]0x015F)ahar"   # Çoy şahar
-$converter = Start-Process $Exe -PassThru
+$converter = Start-Process $Exe -ArgumentList '--tray' -PassThru
 Start-Sleep 3
 $notepad = Start-Process notepad -PassThru
 Start-Sleep 2
