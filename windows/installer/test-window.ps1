@@ -4,7 +4,6 @@ param(
     [string]$Exe = "$env:ProgramFiles\Alifbo\AlifboConverter.exe"
 )
 $ErrorActionPreference = 'Stop'
-Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
 
 $title = "Alifbo $([char]0x2014) konvertor"
 $expected = "$([char]0x00C7)oy $([char]0x015F)ahar"   # Çoy şahar
@@ -28,17 +27,12 @@ try {
     Start-Sleep 1
     $shell.SendKeys('Choy shahar'); Start-Sleep 1
 
-    $root = [System.Windows.Automation.AutomationElement]::FromHandle($first.MainWindowHandle)
-    # Многострочные поля WinForms UI Automation отдаёт как Edit или Document: берём всё, у чего есть значение.
-    $hasValue = New-Object System.Windows.Automation.PropertyCondition(
-        [System.Windows.Automation.AutomationElement]::IsValuePatternAvailableProperty, $true)
-    $values = @()
-    foreach ($el in $root.FindAll([System.Windows.Automation.TreeScope]::Descendants, $hasValue)) {
-        $values += $el.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value.Trim()
-    }
-    Write-Host "Поля окна: [$($values -join '] [')]"
-    if ($values -notcontains 'Choy shahar') { throw 'Текст не попал в поле ввода' }
-    if ($values -notcontains $expected) { throw "Ожидался результат [$expected]" }
+    # Ctrl+Enter в окне копирует результат: читаем его из буфера обмена.
+    Set-Clipboard -Value 'pusto'
+    $shell.SendKeys('^{ENTER}'); Start-Sleep 1
+    $copied = (Get-Clipboard -Raw).Trim()
+    Write-Host "Результат в буфере: [$copied]"
+    if ($copied -ne $expected) { throw "Ожидался результат [$expected], получено [$copied]" }
     Write-Host 'Окно конвертера работает: одна копия, перевод сразу при наборе.'
 } finally {
     Get-Process AlifboConverter -ErrorAction SilentlyContinue | Stop-Process -Force

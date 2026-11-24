@@ -23,6 +23,7 @@ namespace Alifbo
         private readonly Label detected = new Label { AutoSize = true, ForeColor = Turq, Anchor = AnchorStyles.Right, Margin = new Padding(0, 6, 0, 0) };
         private readonly Label count = new Label { AutoSize = true, ForeColor = SystemColors.GrayText, Anchor = AnchorStyles.Right, Margin = new Padding(0, 8, 0, 0) };
         private readonly RadioButton[] targets;
+        private readonly Button copy;
         private Func<string, string> convert;
 
         public ConverterWindow(Icon icon)
@@ -90,8 +91,8 @@ namespace Alifbo
                 Button(Texts.SampleText, (s, e) => { source.Text = Sample; source.Focus(); }),
                 Button(Texts.Clear, (s, e) => { source.Clear(); source.Focus(); }));
             left.Controls.Add(count);
-            var copy = Button(Texts.Copy, null);
-            copy.Click += (s, e) => CopyResult(copy);
+            copy = Button(Texts.Copy + "  (Ctrl+Enter)", null);
+            copy.Click += (s, e) => CopyResult();
             copy.FlatStyle = FlatStyle.Flat;
             copy.FlatAppearance.BorderColor = Accent;
             copy.BackColor = Accent;
@@ -134,6 +135,7 @@ namespace Alifbo
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape) { Hide(); e.Handled = true; }
+            if (e.KeyCode == Keys.Enter && e.Control) { CopyResult(); e.Handled = true; e.SuppressKeyPress = true; }
             base.OnKeyDown(e);
         }
 
@@ -157,7 +159,7 @@ namespace Alifbo
             return kinds.Count == 0 ? "" : Texts.Detected + string.Join(" + ", kinds);
         }
 
-        private void CopyResult(Button copy)
+        private void CopyResult()
         {
             if (result.TextLength == 0) return;
             try { Clipboard.SetText(result.Text); }
