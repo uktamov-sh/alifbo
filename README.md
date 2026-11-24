@@ -38,7 +38,7 @@ asosiy qatorlarda turadi. Klaviatura internetga ulanmaydi va yozganlaringizni sa
 
 ## Windows
 
-Скачайте `alifbo-setup-0.2.0.exe` из [выпусков](https://github.com/uktamov-sh/alifbo/releases) и
+Скачайте `alifbo-setup-0.2.1.exe` из [выпусков](https://github.com/uktamov-sh/alifbo/releases) и
 запустите. Установщик ставит раскладку и конвертер, а удаляется обычным способом через «Приложения».
 Переключайтесь на раскладку сочетанием Win + Пробел.
 
