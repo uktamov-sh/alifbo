@@ -45,10 +45,12 @@ namespace Alifbo
 
         /// <param name="assumeOldLatin">Считать латинский текст старым, даже если в нём уже есть Ş или Ç
         /// (так работает горячая клавиша: её нажимают именно для старого текста).</param>
-        public static string ToNewLatin(string text, bool assumeOldLatin = false)
+        /// <param name="detectFrom">Текст, по которому решается, новый ли это алфавит (по умолчанию сам text).
+        /// Плагин для Word передаёт сюда весь документ, а переводит по абзацам.</param>
+        public static string ToNewLatin(string text, bool assumeOldLatin = false, string detectFrom = null)
         {
             // Если в тексте уже есть Ş или Ç, он написан новым алфавитом и sh/ch в нём — две буквы.
-            bool keepShCh = !assumeOldLatin && NewShCh.IsMatch(text);
+            bool keepShCh = !assumeOldLatin && NewShCh.IsMatch(detectFrom ?? text);
             return Chunk.Replace(text, chunk =>
             {
                 string s = chunk.Value;
@@ -144,9 +146,9 @@ namespace Alifbo
         /// <summary>iPhone, WhatsApp: имена со смешанным регистром не трогаем.</summary>
         private static readonly Regex CamelCase = new Regex(@"\p{Ll}.*\p{Lu}");
 
-        private static string ConvertWords(string text, System.Func<string, string> convertWord)
+        private static string ConvertWords(string text, System.Func<string, string> convertWord, string detectFrom = null)
         {
-            bool keepShCh = NewShCh.IsMatch(text);
+            bool keepShCh = NewShCh.IsMatch(detectFrom ?? text);
             return Chunk.Replace(text, chunk =>
             {
                 string s = chunk.Value;
@@ -205,7 +207,7 @@ namespace Alifbo
         }
 
         /// <summary>Переписывает текст на нынешнюю латиницу (1995): Oʻ, Gʻ, Sh, Ch.</summary>
-        public static string ToOldLatin(string text) => ConvertWords(text, OldLatinOf);
+        public static string ToOldLatin(string text, string detectFrom = null) => ConvertWords(text, OldLatinOf, detectFrom);
 
         // <cyrillic-words> — создано tools/gen-cyrillic-words.js из spec/cyrillic-words.txt, не править руками
         private const string CyrWords = "yanvar=январь|fevral=февраль|aprel=апрель|iyun=июнь|iyul=июль|sentyabr=сентябрь|oktyabr=октябрь|noyabr=ноябрь|dekabr=декабрь|sirk=цирк|sentr=центр|sentner=центнер|sement=цемент|sitata=цитата|siferblat=циферблат|silindr=цилиндр|sikl=цикл|sivilizatsiya=цивилизация|sex=цех|konsert=концерт|prinsip=принцип|abzas=абзац|kansler=канцлер|fransuz=француз|litsey=лицей|litsenziya=лицензия|kompyuter=компьютер|pyesa=пьеса|premyer=премьер|portfel=портфель|mebel=мебель|model=модель|medal=медаль|festival=фестиваль|dizel=дизель|rubl=рубль|spektakl=спектакль|albom=альбом|olga=ольга|natalya=наталья|ilya=илья|pavilyon=павильон|batalyon=батальон|pedal=педаль|tunnel=туннель|gospital=госпиталь|avtomobil=автомобиль|kalendar=календарь|lager=лагерь|ansambl=ансамбль|obyekt=объект|subyekt=субъект|obyektiv=объектив|obyom=объём|syezd=съезд|podyezd=подъезд|adyutant=адъютант|inyeksiya=инъекция|pensiya=пенсия|ekspansiya=экспансия";
@@ -304,7 +306,7 @@ namespace Alifbo
         }
 
         /// <summary>Переписывает латинский текст (новый или нынешний алфавит) на кириллицу. Кириллица остаётся как есть.</summary>
-        public static string ToCyrillic(string text) => ConvertWords(text, CyrillicOf);
+        public static string ToCyrillic(string text, string detectFrom = null) => ConvertWords(text, CyrillicOf, detectFrom);
 
         // --- Исправление апострофов: алфавит не меняется ---
         // После o и g — ʻ (U+02BB), между буквами — тутук ʼ (U+02BC). Эталоны: spec/cases-apostrophes.txt.

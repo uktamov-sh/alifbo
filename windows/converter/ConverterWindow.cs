@@ -39,8 +39,8 @@ namespace Alifbo
             Func<string, string>[] converters =
             {
                 s => AlifboConverter.ToNewLatin(s),
-                AlifboConverter.ToOldLatin,
-                AlifboConverter.ToCyrillic,
+                s => AlifboConverter.ToOldLatin(s),
+                s => AlifboConverter.ToCyrillic(s),
                 AlifboConverter.FixApostrophes,
             };
             string[] names = { Texts.TabNew, Texts.TabOld, Texts.TabCyr, Texts.TabApostrophes };

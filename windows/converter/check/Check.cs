@@ -13,8 +13,8 @@ class Check
         var files = new (string name, Func<string, string> convert)[]
         {
             (Path.GetFileName(path), s => AlifboConverter.ToNewLatin(s)),
-            ("cases-old-latin.txt", AlifboConverter.ToOldLatin),
-            ("cases-cyrillic.txt", AlifboConverter.ToCyrillic),
+            ("cases-old-latin.txt", s => AlifboConverter.ToOldLatin(s)),
+            ("cases-cyrillic.txt", s => AlifboConverter.ToCyrillic(s)),
             ("cases-apostrophes.txt", AlifboConverter.FixApostrophes),
         };
         foreach (var (name, convert) in files)

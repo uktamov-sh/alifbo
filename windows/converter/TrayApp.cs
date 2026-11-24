@@ -123,8 +123,8 @@ namespace Alifbo
             Func<string, string>[] converters =
             {
                 s => AlifboConverter.ToNewLatin(s, assumeOldLatin: true),
-                AlifboConverter.ToOldLatin,
-                AlifboConverter.ToCyrillic,
+                s => AlifboConverter.ToOldLatin(s),
+                s => AlifboConverter.ToCyrillic(s),
                 AlifboConverter.FixApostrophes,
             };
             for (int i = 0; i < targets.Length; i++)
