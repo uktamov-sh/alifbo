@@ -17,10 +17,10 @@ namespace Alifbo
 {
     internal static class Program
     {
-        [STAThread]
         public const string ShowEventName = "Alifbo.Converter.Show";
 
         // --tray: запуск вместе с Windows, только значок в трее. Без него открывается окно конвертера.
+        [STAThread]
         private static void Main(string[] args)
         {
             bool trayOnly = Array.Exists(args, a => a == "--tray");
